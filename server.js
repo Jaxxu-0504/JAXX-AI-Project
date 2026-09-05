@@ -60,6 +60,6 @@ Communicate naturally in Hindi, Hinglish, or English depending on the user's lan
     }
 });
 
-app.listen(PORT, () => {
-    console.log(`🚀 JAXX AI running at http://localhost:${PORT}`);
+app.listen(PORT, "0.0.0.0", () => {
+    console.log(`🚀 JAXX AI running on port ${PORT}`);
 });
