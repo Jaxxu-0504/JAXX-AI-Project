@@ -1,18 +1,27 @@
-```html
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
     <title>JAXX AI</title>
 
+
     <style>
+
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
             font-family: Inter, Arial, sans-serif;
         }
+
 
         /* =========================
            MAIN BACKGROUND
@@ -24,9 +33,13 @@
             height: 100%;
         }
 
+
         body {
+
             color: white;
+
             height: 100vh;
+
             overflow: hidden;
 
             background-color: #020814;
@@ -40,60 +53,85 @@
                 url("./background.png");
 
             background-position: center center;
+
             background-size: cover;
+
             background-repeat: no-repeat;
+
             background-attachment: fixed;
         }
 
+
         .app {
+
             display: flex;
+
             height: 100vh;
+
             width: 100%;
         }
+
 
         /* =========================
            SIDEBAR
         ========================= */
 
         .sidebar {
+
             width: 270px;
 
-            background: rgba(3, 10, 25, 0.42);
+            background:
+                rgba(2, 8, 20, 0.18);
 
-            border-right: 1px solid rgba(120, 180, 255, 0.16);
+            border-right:
+                1px solid
+                rgba(100, 180, 255, 0.16);
 
             padding: 22px;
 
             display: flex;
+
             flex-direction: column;
 
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
+            backdrop-filter:
+                blur(8px)
+                saturate(120%);
+
+            -webkit-backdrop-filter:
+                blur(8px)
+                saturate(120%);
 
             box-shadow:
-                10px 0 40px rgba(0, 0, 0, 0.15);
+                10px 0 40px
+                rgba(0, 0, 0, 0.15);
         }
 
+
         .logo {
+
             font-size: 26px;
+
             font-weight: 800;
+
             letter-spacing: 2px;
+
             margin-bottom: 35px;
         }
+
 
         .logo span {
             color: #3e9cff;
         }
 
+
         .new-chat {
-            border: 1px solid rgba(70, 160, 255, 0.35);
+
+            border:
+                1px solid
+                rgba(70, 160, 255, 0.35);
 
             background:
-                linear-gradient(
-                    135deg,
-                    rgba(20, 105, 255, 0.75),
-                    rgba(40, 45, 180, 0.65)
-                );
+                rgba(20, 105, 255, 0.40);
 
             color: white;
 
@@ -104,23 +142,32 @@
             cursor: pointer;
 
             font-size: 15px;
+
             font-weight: 700;
 
             transition: 0.2s;
 
-            box-shadow:
-                0 0 20px rgba(0, 120, 255, 0.12);
+            backdrop-filter: blur(6px);
+
+            -webkit-backdrop-filter: blur(6px);
         }
+
 
         .new-chat:hover {
-            transform: translateY(-2px);
+
+            transform:
+                translateY(-2px);
 
             box-shadow:
-                0 0 25px rgba(0, 140, 255, 0.35);
+                0 0 25px
+                rgba(0, 140, 255, 0.35);
         }
 
+
         .menu-title {
+
             margin-top: 30px;
+
             margin-bottom: 12px;
 
             color: #8da2c8;
@@ -132,23 +179,36 @@
             letter-spacing: 1px;
         }
 
+
         .history {
+
             color: #c4d2ec;
+
             font-size: 14px;
+
             line-height: 2.6;
         }
 
+
         .history div {
+
             padding: 4px 8px;
+
             border-radius: 8px;
+
             cursor: pointer;
         }
 
+
         .history div:hover {
-            background: rgba(50, 140, 255, 0.12);
+
+            background:
+                rgba(50, 140, 255, 0.12);
         }
 
+
         .bottom {
+
             margin-top: auto;
 
             color: #8291af;
@@ -158,30 +218,36 @@
             text-align: center;
         }
 
+
         /* =========================
            MAIN
         ========================= */
 
         .main {
+
             flex: 1;
 
             display: flex;
+
             flex-direction: column;
 
             min-width: 0;
 
-            background: rgba(0, 5, 15, 0.08);
+            background: transparent;
         }
+
 
         /* =========================
            TOPBAR
         ========================= */
 
         .topbar {
+
             height: 70px;
 
             border-bottom:
-                1px solid rgba(120, 180, 255, 0.16);
+                1px solid
+                rgba(100, 180, 255, 0.14);
 
             display: flex;
 
@@ -191,13 +257,21 @@
 
             padding: 0 28px;
 
-            background: rgba(3, 10, 25, 0.32);
+            background:
+                rgba(2, 8, 20, 0.12);
 
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
+            backdrop-filter:
+                blur(7px)
+                saturate(120%);
+
+            -webkit-backdrop-filter:
+                blur(7px)
+                saturate(120%);
         }
 
+
         .status {
+
             display: flex;
 
             align-items: center;
@@ -209,8 +283,11 @@
             font-size: 14px;
         }
 
+
         .dot {
+
             width: 9px;
+
             height: 9px;
 
             background: #39e58c;
@@ -221,16 +298,21 @@
                 0 0 15px #39e58c;
         }
 
+
         .model {
+
             color: #a4b6d7;
+
             font-size: 13px;
         }
+
 
         /* =========================
            CHAT
         ========================= */
 
         .chat {
+
             flex: 1;
 
             overflow-y: auto;
@@ -242,16 +324,22 @@
             background: transparent;
         }
 
+
         .welcome {
+
             max-width: 850px;
 
-            margin: 7vh auto 0;
+            margin:
+                7vh auto 0;
 
             text-align: center;
         }
 
+
         .ai-icon {
+
             width: 75px;
+
             height: 75px;
 
             margin: auto;
@@ -261,34 +349,44 @@
             display: flex;
 
             align-items: center;
+
             justify-content: center;
 
             font-size: 35px;
 
             background:
-                linear-gradient(
-                    135deg,
-                    rgba(0, 110, 255, 0.85),
-                    rgba(60, 60, 220, 0.75)
-                );
+                rgba(10, 90, 220, 0.35);
 
             border:
-                1px solid rgba(90, 180, 255, 0.45);
+                1px solid
+                rgba(90, 180, 255, 0.45);
 
             box-shadow:
-                0 0 40px rgba(0, 120, 255, 0.30);
+                0 0 40px
+                rgba(0, 120, 255, 0.30);
+
+            backdrop-filter: blur(8px);
+
+            -webkit-backdrop-filter: blur(8px);
         }
 
+
         .welcome h1 {
+
             margin-top: 25px;
+
             font-size: 42px;
         }
 
+
         .welcome h1 span {
+
             color: #4da5ff;
         }
 
+
         .welcome p {
+
             color: #b2c1da;
 
             margin-top: 12px;
@@ -296,11 +394,13 @@
             font-size: 16px;
         }
 
+
         /* =========================
            SUGGESTIONS
         ========================= */
 
         .suggestions {
+
             display: grid;
 
             grid-template-columns:
@@ -311,16 +411,19 @@
             margin-top: 35px;
         }
 
+
         .suggestion {
+
             padding: 18px;
 
             border:
-                1px solid rgba(80, 160, 255, 0.20);
+                1px solid
+                rgba(90, 170, 255, 0.18);
 
             border-radius: 15px;
 
             background:
-                rgba(4, 18, 40, 0.32);
+                rgba(3, 15, 35, 0.18);
 
             color: #d2def1;
 
@@ -330,41 +433,52 @@
 
             transition: 0.2s;
 
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
+            backdrop-filter: blur(6px);
+
+            -webkit-backdrop-filter: blur(6px);
         }
 
+
         .suggestion:hover {
+
             border-color:
                 rgba(60, 160, 255, 0.65);
 
-            transform: translateY(-2px);
+            transform:
+                translateY(-2px);
 
             background:
-                rgba(10, 40, 80, 0.40);
+                rgba(10, 45, 90, 0.28);
 
             box-shadow:
-                0 0 25px rgba(0, 120, 255, 0.15);
+                0 0 25px
+                rgba(0, 120, 255, 0.15);
         }
+
 
         /* =========================
            MESSAGES
         ========================= */
 
         .message {
+
             max-width: 900px;
 
-            margin: 0 auto 25px;
+            margin:
+                0 auto 25px;
 
             display: flex;
 
             gap: 14px;
         }
 
+
         .avatar {
+
             min-width: 38px;
 
             width: 38px;
+
             height: 38px;
 
             border-radius: 12px;
@@ -372,18 +486,24 @@
             display: flex;
 
             align-items: center;
+
             justify-content: center;
 
             font-size: 17px;
 
             background:
-                rgba(10, 25, 50, 0.55);
+                rgba(10, 25, 50, 0.35);
 
             border:
-                1px solid rgba(80, 160, 255, 0.18);
+                1px solid
+                rgba(80, 160, 255, 0.18);
+
+            backdrop-filter: blur(6px);
         }
 
+
         .message.user .avatar {
+
             background:
                 linear-gradient(
                     135deg,
@@ -392,16 +512,20 @@
                 );
         }
 
+
         .bubble {
-            padding: 13px 17px;
+
+            padding:
+                13px 17px;
 
             border-radius: 15px;
 
             background:
-                rgba(4, 18, 40, 0.35);
+                rgba(3, 15, 35, 0.18);
 
             border:
-                1px solid rgba(90, 170, 255, 0.16);
+                1px solid
+                rgba(90, 170, 255, 0.15);
 
             line-height: 1.65;
 
@@ -411,43 +535,49 @@
 
             word-break: break-word;
 
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
+            backdrop-filter: blur(6px);
+
+            -webkit-backdrop-filter: blur(6px);
         }
 
+
         .message.user {
+
             justify-content: flex-end;
         }
 
+
         .message.user .bubble {
+
             background:
-                linear-gradient(
-                    135deg,
-                    rgba(15, 100, 230, 0.70),
-                    rgba(45, 45, 180, 0.70)
-                );
+                rgba(15, 90, 210, 0.35);
 
             border:
-                1px solid rgba(100, 190, 255, 0.25);
+                1px solid
+                rgba(100, 190, 255, 0.25);
         }
 
+
         /* =========================
-           INPUT
+           INPUT AREA
         ========================= */
 
         .input-area {
+
             padding:
                 15px 8% 25px;
 
             background:
                 linear-gradient(
                     to bottom,
-                    rgba(2, 8, 20, 0),
-                    rgba(2, 8, 20, 0.45)
+                    transparent,
+                    rgba(2, 8, 20, 0.20)
                 );
         }
 
+
         .input-box {
+
             max-width: 900px;
 
             margin: auto;
@@ -463,19 +593,28 @@
             border-radius: 18px;
 
             background:
-                rgba(3, 15, 35, 0.42);
+                rgba(3, 15, 35, 0.20);
 
             border:
-                1px solid rgba(90, 170, 255, 0.25);
+                1px solid
+                rgba(90, 170, 255, 0.20);
 
             box-shadow:
-                0 15px 50px rgba(0, 0, 0, 0.25);
+                0 10px 40px
+                rgba(0, 0, 0, 0.15);
 
-            backdrop-filter: blur(14px);
-            -webkit-backdrop-filter: blur(14px);
+            backdrop-filter:
+                blur(8px)
+                saturate(120%);
+
+            -webkit-backdrop-filter:
+                blur(8px)
+                saturate(120%);
         }
 
+
         textarea {
+
             flex: 1;
 
             resize: none;
@@ -497,12 +636,155 @@
             padding: 12px;
         }
 
+
         textarea::placeholder {
             color: #8295b5;
         }
 
-        .send {
+
+        /* =========================
+           ATTACHMENT BUTTON
+        ========================= */
+
+        .attach {
+
             width: 45px;
+
+            height: 45px;
+
+            flex-shrink: 0;
+
+            border:
+                1px solid
+                rgba(90, 170, 255, 0.22);
+
+            border-radius: 13px;
+
+            background:
+                rgba(3, 15, 35, 0.25);
+
+            color: #a8d7ff;
+
+            font-size: 20px;
+
+            cursor: pointer;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            transition: 0.2s ease;
+
+            backdrop-filter: blur(8px);
+
+            -webkit-backdrop-filter: blur(8px);
+        }
+
+
+        .attach:hover {
+
+            background:
+                rgba(20, 100, 220, 0.35);
+
+            border-color:
+                rgba(90, 180, 255, 0.45);
+
+            box-shadow:
+                0 0 20px
+                rgba(0, 130, 255, 0.25);
+
+            transform:
+                translateY(-1px);
+        }
+
+
+        /* =========================
+           FILE PREVIEW
+        ========================= */
+
+        .file-preview {
+
+            display: none;
+
+            max-width: 900px;
+
+            margin:
+                8px auto 0;
+
+            padding:
+                9px 12px;
+
+            border-radius: 11px;
+
+            background:
+                rgba(3, 15, 35, 0.30);
+
+            border:
+                1px solid
+                rgba(90, 170, 255, 0.20);
+
+            color: #d8eaff;
+
+            font-size: 13px;
+
+            backdrop-filter: blur(8px);
+
+            -webkit-backdrop-filter: blur(8px);
+        }
+
+
+        .file-preview.active {
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: space-between;
+
+            gap: 10px;
+        }
+
+
+        .file-name {
+
+            overflow: hidden;
+
+            text-overflow: ellipsis;
+
+            white-space: nowrap;
+        }
+
+
+        .file-remove {
+
+            border: none;
+
+            background: transparent;
+
+            color: #ff8b8b;
+
+            cursor: pointer;
+
+            font-size: 16px;
+        }
+
+
+        .file-remove:hover {
+
+            color: #ff5555;
+        }
+
+
+        /* =========================
+           SEND
+        ========================= */
+
+        .send {
+
+            width: 45px;
+
             height: 45px;
 
             border: none;
@@ -523,20 +805,29 @@
             cursor: pointer;
 
             box-shadow:
-                0 0 18px rgba(0, 120, 255, 0.20);
+                0 0 18px
+                rgba(0, 120, 255, 0.20);
         }
+
 
         .send:hover {
+
             box-shadow:
-                0 0 25px rgba(0, 140, 255, 0.45);
+                0 0 25px
+                rgba(0, 140, 255, 0.45);
         }
 
+
         .send:disabled {
+
             opacity: 0.5;
+
             cursor: not-allowed;
         }
 
+
         .hint {
+
             text-align: center;
 
             color: #7183a2;
@@ -546,11 +837,13 @@
             margin-top: 9px;
         }
 
+
         /* =========================
            TYPING
         ========================= */
 
         .typing {
+
             display: flex;
 
             gap: 5px;
@@ -558,8 +851,11 @@
             padding: 5px 0;
         }
 
+
         .typing span {
+
             width: 7px;
+
             height: 7px;
 
             border-radius: 50%;
@@ -570,26 +866,37 @@
                 bounce 1s infinite;
         }
 
+
         .typing span:nth-child(2) {
             animation-delay: .15s;
         }
+
 
         .typing span:nth-child(3) {
             animation-delay: .3s;
         }
 
+
         @keyframes bounce {
 
-            0%, 100% {
-                transform: translateY(0);
+            0%,
+            100% {
+
+                transform:
+                    translateY(0);
+
                 opacity: .4;
             }
 
             50% {
-                transform: translateY(-5px);
+
+                transform:
+                    translateY(-5px);
+
                 opacity: 1;
             }
         }
+
 
         /* =========================
            SCROLLBAR
@@ -599,16 +906,20 @@
             width: 6px;
         }
 
+
         .chat::-webkit-scrollbar-track {
             background: transparent;
         }
 
+
         .chat::-webkit-scrollbar-thumb {
+
             background:
                 rgba(70, 150, 255, 0.35);
 
             border-radius: 10px;
         }
+
 
         /* =========================
            MOBILE
@@ -645,98 +956,33 @@
                 background-position:
                     center center;
             }
+
+            .file-preview {
+                max-width: 100%;
+            }
         }
-/* ===== JAXX PREMIUM GLASS UI ===== */
 
-.sidebar {
-    background: rgba(2, 8, 20, 0.18) !important;
-    backdrop-filter: blur(8px) saturate(120%);
-    -webkit-backdrop-filter: blur(8px) saturate(120%);
-    border-right: 1px solid rgba(100, 180, 255, 0.16);
-}
-
-.main {
-    background: transparent !important;
-}
-
-.topbar {
-    background: rgba(2, 8, 20, 0.12) !important;
-    backdrop-filter: blur(7px) saturate(120%);
-    -webkit-backdrop-filter: blur(7px) saturate(120%);
-    border-bottom: 1px solid rgba(100, 180, 255, 0.14);
-}
-
-.chat {
-    background: transparent !important;
-}
-
-.suggestion {
-    background: rgba(3, 15, 35, 0.18) !important;
-    backdrop-filter: blur(6px);
-    -webkit-backdrop-filter: blur(6px);
-    border: 1px solid rgba(90, 170, 255, 0.18);
-}
-
-.suggestion:hover {
-    background: rgba(10, 45, 90, 0.28) !important;
-}
-
-.bubble {
-    background: rgba(3, 15, 35, 0.18) !important;
-    backdrop-filter: blur(6px);
-    -webkit-backdrop-filter: blur(6px);
-    border: 1px solid rgba(90, 170, 255, 0.15);
-}
-
-.message.user .bubble {
-    background: rgba(15, 90, 210, 0.35) !important;
-    backdrop-filter: blur(6px);
-    -webkit-backdrop-filter: blur(6px);
-}
-
-.input-area {
-    background: linear-gradient(
-        to bottom,
-        transparent,
-        rgba(2, 8, 20, 0.20)
-    ) !important;
-}
-
-.input-box {
-    background: rgba(3, 15, 35, 0.20) !important;
-    backdrop-filter: blur(8px) saturate(120%);
-    -webkit-backdrop-filter: blur(8px) saturate(120%);
-    border: 1px solid rgba(90, 170, 255, 0.20);
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
-}
-
-/* AI icon ko thoda glass look */
-.ai-icon {
-    background: rgba(10, 90, 220, 0.35) !important;
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
-}
-
-/* Sidebar button */
-.new-chat {
-    background: rgba(20, 105, 255, 0.40) !important;
-    backdrop-filter: blur(6px);
-    -webkit-backdrop-filter: blur(6px);
-}
     </style>
+
 </head>
+
 
 <body>
 
+
 <div class="app">
 
-    <!-- SIDEBAR -->
+
+    <!-- =========================
+         SIDEBAR
+    ========================= -->
 
     <aside class="sidebar">
 
         <div class="logo">
             JAXX<span>AI</span>
         </div>
+
 
         <button
             class="new-chat"
@@ -746,9 +992,11 @@
 
         </button>
 
+
         <div class="menu-title">
             Recent Chats
         </div>
+
 
         <div
             class="history"
@@ -760,6 +1008,7 @@
 
         </div>
 
+
         <div class="bottom">
             JAXX AI • Powered by OpenAI
         </div>
@@ -767,9 +1016,14 @@
     </aside>
 
 
-    <!-- MAIN -->
+    <!-- =========================
+         MAIN
+    ========================= -->
 
     <main class="main">
+
+
+        <!-- TOPBAR -->
 
         <header class="topbar">
 
@@ -780,6 +1034,7 @@
                 AI Online
 
             </div>
+
 
             <div class="model">
                 GPT-5.6 Luna
@@ -794,24 +1049,30 @@
             class="chat"
             id="chat">
 
+
             <div
                 class="welcome"
                 id="welcome">
+
 
                 <div class="ai-icon">
                     ✦
                 </div>
 
+
                 <h1>
                     Meet <span>JAXX AI</span>
                 </h1>
+
 
                 <p>
                     Your intelligent AI assistant for coding,
                     study, ideas and everyday questions.
                 </p>
 
+
                 <div class="suggestions">
+
 
                     <div
                         class="suggestion"
@@ -821,6 +1082,7 @@
 
                     </div>
 
+
                     <div
                         class="suggestion"
                         onclick="useSuggestion('Give me a cool HTML project idea')">
@@ -828,6 +1090,7 @@
                         💻 Build something
 
                     </div>
+
 
                     <div
                         class="suggestion"
@@ -837,6 +1100,7 @@
 
                     </div>
 
+
                     <div
                         class="suggestion"
                         onclick="useSuggestion('Tell me an interesting fact')">
@@ -845,6 +1109,7 @@
 
                     </div>
 
+
                 </div>
 
             </div>
@@ -852,17 +1117,50 @@
         </section>
 
 
-        <!-- INPUT -->
+        <!-- =========================
+             INPUT
+        ========================= -->
 
         <div class="input-area">
 
+
+            <!-- FILE PICKER -->
+
+            <input
+                type="file"
+                id="fileInput"
+                hidden
+                accept="image/*,.pdf,.txt,.csv,.doc,.docx"
+            >
+
+
             <div class="input-box">
+
+
+                <!-- ATTACHMENT -->
+
+                <button
+                    class="attach"
+                    id="attachBtn"
+                    type="button"
+                    title="Attach file"
+                    onclick="document.getElementById('fileInput').click()">
+
+                    📎
+
+                </button>
+
+
+                <!-- TEXT -->
 
                 <textarea
                     id="input"
                     placeholder="Message JAXX AI..."
                     rows="1">
                 </textarea>
+
+
+                <!-- SEND -->
 
                 <button
                     class="send"
@@ -873,37 +1171,77 @@
 
                 </button>
 
+
             </div>
+
+
+            <!-- FILE PREVIEW -->
+
+            <div
+                class="file-preview"
+                id="filePreview">
+            </div>
+
 
             <div class="hint">
+
+                📎 Images • PDF • Documents
+                &nbsp; | &nbsp;
                 Enter to send • Shift + Enter for new line
+
             </div>
 
+
         </div>
+
 
     </main>
 
 </div>
 
 
+
 <script>
+
+
+    /* =========================
+       ELEMENTS
+    ========================= */
 
     const input =
         document.getElementById("input");
 
+
     const chat =
         document.getElementById("chat");
+
 
     const send =
         document.getElementById("send");
 
+
     const welcome =
         document.getElementById("welcome");
+
+
+    const fileInput =
+        document.getElementById("fileInput");
+
+
+    const filePreview =
+        document.getElementById("filePreview");
+
 
     let messages = [];
 
 
-    /* ENTER TO SEND */
+    let selectedFile = null;
+
+
+
+    /* =========================
+       ENTER TO SEND
+    ========================= */
 
     input.addEventListener(
         "keydown",
@@ -924,7 +1262,10 @@
     );
 
 
-    /* AUTO RESIZE */
+
+    /* =========================
+       AUTO RESIZE
+    ========================= */
 
     input.addEventListener(
         "input",
@@ -942,7 +1283,79 @@
     );
 
 
-    /* SUGGESTION */
+
+    /* =========================
+       FILE SELECT
+    ========================= */
+
+    fileInput.addEventListener(
+        "change",
+        function() {
+
+            if (
+                !this.files ||
+                this.files.length === 0
+            ) {
+
+                return;
+
+            }
+
+
+            selectedFile =
+                this.files[0];
+
+
+            filePreview.innerHTML = `
+
+                <span class="file-name">
+                    📎 ${selectedFile.name}
+                </span>
+
+                <button
+                    class="file-remove"
+                    type="button"
+                    onclick="removeFile()">
+
+                    ✕
+
+                </button>
+
+            `;
+
+
+            filePreview.classList.add(
+                "active"
+            );
+
+        }
+    );
+
+
+
+    /* =========================
+       REMOVE FILE
+    ========================= */
+
+    function removeFile() {
+
+        selectedFile = null;
+
+        fileInput.value = "";
+
+        filePreview.innerHTML = "";
+
+        filePreview.classList.remove(
+            "active"
+        );
+
+    }
+
+
+
+    /* =========================
+       SUGGESTION
+    ========================= */
 
     function useSuggestion(text) {
 
@@ -955,7 +1368,10 @@
     }
 
 
-    /* ADD MESSAGE */
+
+    /* =========================
+       ADD MESSAGE
+    ========================= */
 
     function addMessage(role, text) {
 
@@ -963,6 +1379,7 @@
             document.getElementById(
                 "welcome"
             );
+
 
         if (currentWelcome) {
 
@@ -977,6 +1394,7 @@
                 "div"
             );
 
+
         wrapper.className =
             "message " + role;
 
@@ -985,6 +1403,7 @@
             document.createElement(
                 "div"
             );
+
 
         avatar.className =
             "avatar";
@@ -1000,6 +1419,7 @@
             document.createElement(
                 "div"
             );
+
 
         bubble.className =
             "bubble";
@@ -1025,7 +1445,10 @@
     }
 
 
-    /* TYPING */
+
+    /* =========================
+       TYPING
+    ========================= */
 
     function showTyping() {
 
@@ -1034,8 +1457,10 @@
                 "div"
             );
 
+
         wrapper.className =
             "message assistant";
+
 
         wrapper.id =
             "typing";
@@ -1070,12 +1495,14 @@
     }
 
 
+
     function removeTyping() {
 
         const typing =
             document.getElementById(
                 "typing"
             );
+
 
         if (typing) {
 
@@ -1086,50 +1513,191 @@
     }
 
 
-    /* SEND MESSAGE */
+
+    /* =========================
+       SEND NORMAL MESSAGE
+    ========================= */
 
     async function sendMessage() {
+
 
         const text =
             input.value.trim();
 
 
+        /*
+         * Allow sending when either
+         * text OR file exists.
+         */
+
         if (
-            !text ||
+            (!text && !selectedFile) ||
             send.disabled
-        )
+        ) {
+
             return;
 
-
-        addMessage(
-            "user",
-            text
-        );
+        }
 
 
-        messages.push({
-
-            role: "user",
-
-            content: text
-
-        });
-
-
-        input.value = "";
-
-        input.style.height =
-            "auto";
-
-
-        send.disabled =
-            true;
+        send.disabled = true;
 
 
         showTyping();
 
 
+
         try {
+
+
+            /* =========================
+               FILE UPLOAD
+            ========================= */
+
+            if (selectedFile) {
+
+
+                const formData =
+                    new FormData();
+
+
+                formData.append(
+                    "file",
+                    selectedFile
+                );
+
+
+                formData.append(
+                    "message",
+                    text ||
+                    "Please analyze this file and explain it clearly."
+                );
+
+
+                /*
+                 * Show user's file
+                 */
+
+                addMessage(
+                    "user",
+                    "📎 " +
+                    selectedFile.name +
+                    (
+                        text
+                            ? "\n\n" + text
+                            : ""
+                    )
+                );
+
+
+                const response =
+                    await fetch(
+                        "/api/upload",
+                        {
+
+                            method: "POST",
+
+                            body: formData
+
+                        }
+                    );
+
+
+                const data =
+                    await response.json();
+
+
+                removeTyping();
+
+
+                if (!response.ok) {
+
+                    throw new Error(
+                        data.error ||
+                        "File upload failed"
+                    );
+
+                }
+
+
+                const reply =
+                    data.reply ||
+                    "File analyze ho gayi, but response empty hai.";
+
+
+                addMessage(
+                    "assistant",
+                    reply
+                );
+
+
+                messages.push({
+
+                    role: "user",
+
+                    content:
+                        "📎 " +
+                        selectedFile.name +
+                        (
+                            text
+                                ? "\n" + text
+                                : ""
+                        )
+
+                });
+
+
+                messages.push({
+
+                    role: "assistant",
+
+                    content: reply
+
+                });
+
+
+                saveChat();
+
+
+                removeFile();
+
+
+                input.value = "";
+
+                input.style.height =
+                    "auto";
+
+
+                return;
+
+            }
+
+
+
+            /* =========================
+               NORMAL CHAT
+            ========================= */
+
+            addMessage(
+                "user",
+                text
+            );
+
+
+            messages.push({
+
+                role: "user",
+
+                content: text
+
+            });
+
+
+            input.value = "";
+
+            input.style.height =
+                "auto";
+
 
             const response =
                 await fetch(
@@ -1199,7 +1767,9 @@
 
         }
 
+
         catch (error) {
+
 
             removeTyping();
 
@@ -1208,9 +1778,7 @@
 
                 "assistant",
 
-                "⚠️ AI response nahi aa paaya.\n\n" +
-
-                "Server/API key check karo.\n\n" +
+                "⚠️ JAXX response nahi aa paaya.\n\n" +
 
                 "Error: " +
                 error.message
@@ -1218,9 +1786,13 @@
             );
 
 
-            console.error(error);
+            console.error(
+                "JAXX ERROR:",
+                error
+            );
 
         }
+
 
         finally {
 
@@ -1234,11 +1806,17 @@
     }
 
 
-    /* NEW CHAT */
+
+    /* =========================
+       NEW CHAT
+    ========================= */
 
     function newChat() {
 
         messages = [];
+
+
+        removeFile();
 
 
         chat.innerHTML = `
@@ -1262,6 +1840,7 @@
                 </p>
 
                 <div class="suggestions">
+
 
                     <div
                         class="suggestion"
@@ -1298,6 +1877,7 @@
 
                     </div>
 
+
                 </div>
 
             </div>
@@ -1312,7 +1892,10 @@
     }
 
 
-    /* SAVE */
+
+    /* =========================
+       SAVE CHAT
+    ========================= */
 
     function saveChat() {
 
@@ -1327,7 +1910,10 @@
     }
 
 
-    /* LOAD */
+
+    /* =========================
+       LOAD CHAT
+    ========================= */
 
     function loadChat() {
 
@@ -1363,6 +1949,7 @@
 
         }
 
+
         catch {
 
             messages = [];
@@ -1372,9 +1959,17 @@
     }
 
 
+
+    /* =========================
+       START
+    ========================= */
+
     loadChat();
+
 
 </script>
 
+
 </body>
+
 </html>
