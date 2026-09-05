@@ -5,6 +5,7 @@ const fs = require("fs");
 require("dotenv").config();
 
 const OpenAI = require("openai");
+const { toFile } = require("openai");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -13,14 +14,20 @@ const client = new OpenAI({
     apiKey: process.env.OPENAI_API_KEY
 });
 
-// Upload folder
+// =====================================================
+// UPLOAD FOLDER
+// =====================================================
+
 const uploadDir = path.join(__dirname, "uploads");
 
 if (!fs.existsSync(uploadDir)) {
     fs.mkdirSync(uploadDir);
 }
 
-// Multer configuration
+// =====================================================
+// MULTER
+// =====================================================
+
 const upload = multer({
     dest: uploadDir,
     limits: {
@@ -31,9 +38,14 @@ const upload = multer({
 app.use(express.json({ limit: "20mb" }));
 app.use(express.static(path.join(__dirname, "public")));
 
-// Normal chat
+// =====================================================
+// NORMAL CHAT
+// =====================================================
+
 app.post("/api/chat", async (req, res) => {
+
     try {
+
         const messages = req.body.messages || [];
 
         if (!Array.isArray(messages)) {
@@ -43,6 +55,7 @@ app.post("/api/chat", async (req, res) => {
         }
 
         const response = await client.responses.create({
+
             model: "gpt-5.6-luna",
 
             instructions:
@@ -65,101 +78,233 @@ app.post("/api/chat", async (req, res) => {
         });
 
     } catch (error) {
+
         console.error("CHAT ERROR:", error);
 
         res.status(500).json({
-            error: "AI response nahi aa paaya. Server ya API configuration check karo."
+            error:
+                "AI response nahi aa paaya. Server ya API configuration check karo."
         });
     }
 });
 
-// File / image upload
+// =====================================================
+// FILE / IMAGE UPLOAD
+// =====================================================
+
 app.post("/api/upload", upload.single("file"), async (req, res) => {
+
     try {
+
         if (!req.file) {
+
             return res.status(400).json({
                 error: "File select nahi ki gayi."
             });
+
         }
 
         const userMessage =
             req.body.message ||
             "Is file ko analyze karo aur mujhe clearly explain karo.";
 
+        console.log("--------------------------------");
+        console.log("FILE RECEIVED");
+        console.log("Name:", req.file.originalname);
+        console.log("Mimetype:", req.file.mimetype);
+        console.log("Size:", req.file.size);
+        console.log("--------------------------------");
+
+        // =================================================
+        // DETECT FILE TYPE
+        // =================================================
+
+        const extension =
+            path.extname(req.file.originalname).toLowerCase();
+
+        const imageExtensions = [
+            ".jpg",
+            ".jpeg",
+            ".png",
+            ".gif",
+            ".webp"
+        ];
+
+        const isImage =
+            imageExtensions.includes(extension);
+
+        console.log("Extension:", extension);
+        console.log("Detected as image:", isImage);
+
+        // =================================================
+        // IMPORTANT:
+        // Give OpenAI the ORIGINAL filename.
+        // Multer's temporary file has no extension.
+        // =================================================
+
+        const fileBuffer = fs.readFileSync(req.file.path);
+
+        const openAIFile = await toFile(
+            fileBuffer,
+            req.file.originalname,
+            {
+                type: req.file.mimetype
+            }
+        );
+
+        // =================================================
+        // UPLOAD TO OPENAI
+        // =================================================
+
         const uploadedFile = await client.files.create({
-            file: fs.createReadStream(req.file.path),
-            purpose: "user_data"
+
+            file: openAIFile,
+
+            purpose: isImage
+                ? "vision"
+                : "user_data"
         });
 
-        const isImage = req.file.mimetype.startsWith("image/");
+        console.log("OpenAI File ID:", uploadedFile.id);
+        console.log("OpenAI Filename:", uploadedFile.filename);
+        console.log("OpenAI Purpose:", uploadedFile.purpose);
 
-        let content;
+        // =================================================
+        // IMAGE
+        // =================================================
 
         if (isImage) {
-            content = [
-                {
-                    type: "input_text",
-                    text: userMessage
-                },
-                {
-                    type: "input_image",
-                    file_id: uploadedFile.id
-                }
-            ];
-        } else {
-            content = [
-                {
-                    type: "input_text",
-                    text: userMessage
-                },
-                {
-                    type: "input_file",
-                    file_id: uploadedFile.id
-                }
-            ];
+
+            console.log("Sending as IMAGE...");
+
+            const response =
+                await client.responses.create({
+
+                    model: "gpt-5.6-luna",
+
+                    instructions:
+                        "You are JAXX AI. Analyze the uploaded image carefully. " +
+                        "Describe and explain what is visible in the image accurately. " +
+                        "Answer naturally in Hindi, Hinglish, or English depending on the user's language.",
+
+                    input: [
+                        {
+                            role: "user",
+
+                            content: [
+
+                                {
+                                    type: "input_text",
+                                    text: userMessage
+                                },
+
+                                {
+                                    type: "input_image",
+                                    file_id: uploadedFile.id
+                                }
+
+                            ]
+                        }
+                    ]
+                });
+
+            return res.json({
+
+                reply: response.output_text,
+
+                filename:
+                    req.file.originalname
+
+            });
         }
 
-        const response = await client.responses.create({
-            model: "gpt-5.6-luna",
+        // =================================================
+        // PDF / DOC / TXT / CSV / OTHER FILE
+        // =================================================
 
-            instructions:
-                "You are JAXX AI. Analyze the uploaded file carefully. " +
-                "Answer clearly and naturally in Hindi, Hinglish, or English " +
-                "depending on the user's language.",
+        console.log("Sending as FILE...");
 
-            input: [
-                {
-                    role: "user",
-                    content: content
-                }
-            ]
-        });
+        const response =
+            await client.responses.create({
 
-        // Remove temporary local upload
-        try {
-            fs.unlinkSync(req.file.path);
-        } catch {}
+                model: "gpt-5.6-luna",
+
+                instructions:
+                    "You are JAXX AI. Analyze the uploaded file carefully. " +
+                    "Extract and understand the useful information from it. " +
+                    "Answer clearly and naturally in Hindi, Hinglish, or English " +
+                    "depending on the user's language.",
+
+                input: [
+                    {
+                        role: "user",
+
+                        content: [
+
+                            {
+                                type: "input_text",
+                                text: userMessage
+                            },
+
+                            {
+                                type: "input_file",
+                                file_id: uploadedFile.id
+                            }
+
+                        ]
+                    }
+                ]
+            });
 
         res.json({
+
             reply: response.output_text,
-            filename: req.file.originalname
+
+            filename:
+                req.file.originalname
+
         });
 
     } catch (error) {
+
         console.error("UPLOAD ERROR:", error);
 
+        res.status(500).json({
+
+            error:
+                error?.message ||
+                "File analyze nahi ho paayi."
+
+        });
+
+    } finally {
+
+        // =================================================
+        // DELETE TEMPORARY LOCAL FILE
+        // =================================================
+
         if (req.file) {
+
             try {
+
                 fs.unlinkSync(req.file.path);
+
             } catch {}
+
         }
 
-        res.status(500).json({
-            error: "File analyze nahi ho paayi."
-        });
     }
+
 });
 
+// =====================================================
+// START SERVER
+// =====================================================
+
 app.listen(PORT, "0.0.0.0", () => {
-    console.log(`🚀 JAXX AI running on port ${PORT}`);
+
+    console.log(
+        `🚀 JAXX AI running on port ${PORT}`
+    );
+
 });
