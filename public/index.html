@@ -373,6 +373,38 @@
                 display: none;
             }
         }
+        body {
+    background:
+        linear-gradient(
+            90deg,
+            rgba(2, 8, 20, 0.15),
+            rgba(2, 8, 20, 0.45)
+        ),
+        url("background.png") center center / cover no-repeat fixed !important;
+
+    background-color: #020814 !important;
+}
+
+/* JAXX UI ko transparent/glass rakho */
+.sidebar,
+.topbar,
+.chat-container,
+.input-area,
+.message-box,
+.suggestion-card {
+    background: rgba(3, 12, 30, 0.30) !important;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+}
+
+/* Chat messages */
+.message,
+.user-message,
+.ai-message {
+    background: rgba(3, 15, 35, 0.30) !important;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+}
     </style>
 </head>
 
