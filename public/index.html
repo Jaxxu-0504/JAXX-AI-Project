@@ -1,480 +1,1729 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+>
+
 <title>JAXX AI</title>
 
 <style>
+
 * {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
 }
 
+:root {
+    --bg: #030819;
+    --panel: rgba(9, 17, 42, 0.72);
+    --panel2: rgba(13, 24, 55, 0.72);
+    --border: rgba(255,255,255,0.10);
+    --text: #f4f7ff;
+    --muted: #94a3c4;
+    --blue: #5b8cff;
+    --blue2: #7b61ff;
+    --danger: #ff5577;
+}
+
 body {
-    font-family: Arial, Helvetica, sans-serif;
+
+    min-height: 100vh;
+
+    font-family:
+        Inter,
+        system-ui,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
+
+    color: var(--text);
+
     background:
-        linear-gradient(rgba(3, 8, 25, 0.78), rgba(3, 8, 25, 0.9)),
-        url("/background.png") center/cover fixed;
-    color: white;
-    height: 100vh;
+        linear-gradient(
+            rgba(3, 8, 25, 0.78),
+            rgba(3, 8, 25, 0.90)
+        ),
+        url("/background.png")
+        center/cover fixed;
+
     overflow: hidden;
 }
 
+/* =========================
+   APP
+========================= */
+
 .app {
+
     display: flex;
+
+    width: 100vw;
     height: 100vh;
+
+    overflow: hidden;
 }
 
-/* ================= SIDEBAR ================= */
+/* =========================
+   SIDEBAR
+========================= */
 
 .sidebar {
-    width: 250px;
-    background: rgba(4, 10, 30, 0.82);
-    backdrop-filter: blur(18px);
-    border-right: 1px solid rgba(255,255,255,0.08);
+
+    width: 270px;
+
+    padding: 22px 16px;
+
     display: flex;
     flex-direction: column;
-    padding: 20px;
+
+    background:
+        rgba(3, 8, 25, 0.72);
+
+    border-right:
+        1px solid var(--border);
+
+    backdrop-filter:
+        blur(20px);
+
+    -webkit-backdrop-filter:
+        blur(20px);
 }
 
 .logo {
-    font-size: 28px;
+
+    font-size: 26px;
     font-weight: 800;
-    letter-spacing: 2px;
-    margin-bottom: 25px;
+
+    letter-spacing: 1px;
+
+    margin-bottom: 22px;
+
+    background:
+        linear-gradient(
+            90deg,
+            #ffffff,
+            #7fa7ff,
+            #9b7cff
+        );
+
+    -webkit-background-clip: text;
+    background-clip: text;
+
+    color: transparent;
 }
 
 .new-chat {
+
     width: 100%;
-    padding: 13px;
-    border: none;
-    border-radius: 12px;
-    background: rgba(40, 100, 255, 0.25);
+
+    border: 1px solid
+        rgba(120,150,255,0.25);
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(91,140,255,0.18),
+            rgba(123,97,255,0.15)
+        );
+
     color: white;
+
+    padding: 13px 15px;
+
+    border-radius: 14px;
+
     cursor: pointer;
-    font-size: 15px;
+
+    font-size: 14px;
+    font-weight: 600;
+
     transition: 0.2s;
 }
 
 .new-chat:hover {
-    background: rgba(40, 100, 255, 0.45);
+
+    transform: translateY(-1px);
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(91,140,255,0.28),
+            rgba(123,97,255,0.25)
+        );
+}
+
+.chat-list {
+
+    margin-top: 16px;
+
+    overflow-y: auto;
+
+    flex: 1;
+
+    padding-right: 3px;
+}
+
+.chat-list::-webkit-scrollbar {
+
+    width: 5px;
+}
+
+.chat-list::-webkit-scrollbar-thumb {
+
+    background:
+        rgba(255,255,255,0.12);
+
+    border-radius: 20px;
+}
+
+.chat-item {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 8px;
+
+    margin-bottom: 7px;
+
+    padding: 10px;
+
+    border-radius: 11px;
+
+    cursor: pointer;
+
+    color: #b8c4df;
+
+    background:
+        transparent;
+
+    transition: 0.2s;
+}
+
+.chat-item:hover {
+
+    background:
+        rgba(255,255,255,0.06);
+
+    color: white;
+}
+
+.chat-item.active {
+
+    background:
+        rgba(91,140,255,0.15);
+
+    color: white;
+
+    border:
+        1px solid
+        rgba(91,140,255,0.18);
+}
+
+.chat-title {
+
+    flex: 1;
+
+    min-width: 0;
+
+    white-space: nowrap;
+
+    overflow: hidden;
+
+    text-overflow: ellipsis;
+
+    font-size: 13px;
+}
+
+.chat-actions {
+
+    display: flex;
+
+    gap: 3px;
+
+    opacity: 0;
+
+    transition: 0.2s;
+}
+
+.chat-item:hover
+.chat-actions {
+
+    opacity: 1;
+}
+
+.chat-action {
+
+    border: 0;
+
+    background:
+        rgba(255,255,255,0.06);
+
+    color: #aeb9d3;
+
+    width: 26px;
+    height: 26px;
+
+    border-radius: 7px;
+
+    cursor: pointer;
+}
+
+.chat-action:hover {
+
+    color: white;
+
+    background:
+        rgba(255,255,255,0.12);
+}
+
+.chat-action.delete:hover {
+
+    color: #ff6c8d;
+
+    background:
+        rgba(255,70,100,0.12);
 }
 
 .sidebar-footer {
-    margin-top: auto;
-    color: #8d96b5;
-    font-size: 12px;
+
+    padding-top: 15px;
+
+    color: #677492;
+
+    font-size: 11px;
+
     text-align: center;
 }
 
-/* ================= MAIN ================= */
+/* =========================
+   MAIN
+========================= */
 
 .main {
+
     flex: 1;
-    display: flex;
-    flex-direction: column;
+
     min-width: 0;
+
+    display: flex;
+
+    flex-direction: column;
 }
+
+/* =========================
+   TOPBAR
+========================= */
 
 .topbar {
-    height: 65px;
+
+    height: 72px;
+
+    padding: 0 24px;
+
     display: flex;
+
     align-items: center;
+
     justify-content: space-between;
-    padding: 0 25px;
-    background: rgba(4, 10, 30, 0.55);
-    backdrop-filter: blur(15px);
-    border-bottom: 1px solid rgba(255,255,255,0.07);
+
+    border-bottom:
+        1px solid var(--border);
+
+    background:
+        rgba(3,8,25,0.48);
+
+    backdrop-filter:
+        blur(18px);
 }
 
-.top-title {
-    font-size: 19px;
-    font-weight: bold;
+.brand {
+
+    font-size: 18px;
+
+    font-weight: 700;
 }
 
-.online {
-    font-size: 13px;
-    color: #62ff9b;
+.status {
+
+    margin-left: 9px;
+
+    color: #67e8a3;
+
+    font-size: 12px;
 }
 
-/* ================= CHAT ================= */
+.account-wrap {
 
-.chat {
+    position: relative;
+}
+
+.account-btn {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 8px;
+
+    border:
+        1px solid var(--border);
+
+    background:
+        rgba(255,255,255,0.05);
+
+    color: white;
+
+    padding: 9px 13px;
+
+    border-radius: 12px;
+
+    cursor: pointer;
+}
+
+.account-btn:hover {
+
+    background:
+        rgba(255,255,255,0.09);
+}
+
+.account-menu {
+
+    position: absolute;
+
+    top: 48px;
+    right: 0;
+
+    width: 230px;
+
+    padding: 10px;
+
+    border:
+        1px solid var(--border);
+
+    border-radius: 15px;
+
+    background:
+        rgba(7,14,34,0.96);
+
+    backdrop-filter:
+        blur(22px);
+
+    box-shadow:
+        0 20px 60px
+        rgba(0,0,0,0.45);
+
+    display: none;
+
+    z-index: 50;
+}
+
+.account-menu.show {
+
+    display: block;
+}
+
+.account-info {
+
+    padding: 10px;
+
+    border-bottom:
+        1px solid var(--border);
+
+    margin-bottom: 7px;
+}
+
+.account-name {
+
+    font-weight: 700;
+
+    font-size: 14px;
+}
+
+.account-email {
+
+    color: var(--muted);
+
+    font-size: 11px;
+
+    margin-top: 3px;
+
+    word-break: break-all;
+}
+
+.plan-badge {
+
+    display: inline-flex;
+
+    margin-top: 8px;
+
+    padding: 4px 8px;
+
+    border-radius: 20px;
+
+    font-size: 10px;
+
+    font-weight: 700;
+
+    background:
+        rgba(91,140,255,0.15);
+
+    color: #9ab6ff;
+
+    border:
+        1px solid
+        rgba(91,140,255,0.2);
+}
+
+.menu-btn {
+
+    width: 100%;
+
+    text-align: left;
+
+    padding: 10px;
+
+    border: 0;
+
+    border-radius: 9px;
+
+    background: transparent;
+
+    color: #d8e0f4;
+
+    cursor: pointer;
+}
+
+.menu-btn:hover {
+
+    background:
+        rgba(255,255,255,0.06);
+}
+
+.menu-btn.logout:hover {
+
+    color: #ff7692;
+}
+
+/* =========================
+   CHAT
+========================= */
+
+.chat-area {
+
     flex: 1;
+
     overflow-y: auto;
-    padding: 30px 8%;
-    scroll-behavior: smooth;
+
+    padding: 30px 20px 160px;
+}
+
+.chat-area::-webkit-scrollbar {
+
+    width: 6px;
+}
+
+.chat-area::-webkit-scrollbar-thumb {
+
+    background:
+        rgba(255,255,255,0.12);
+
+    border-radius: 20px;
+}
+
+.messages {
+
+    width: min(900px, 100%);
+
+    margin: auto;
 }
 
 .welcome {
+
+    min-height: 55vh;
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+
+    justify-content: center;
+
     text-align: center;
-    margin-top: 12vh;
 }
 
 .welcome h1 {
-    font-size: 42px;
+
+    font-size: clamp(34px, 6vw, 58px);
+
     margin-bottom: 10px;
+
+    background:
+        linear-gradient(
+            90deg,
+            #fff,
+            #83a7ff,
+            #9d80ff
+        );
+
+    -webkit-background-clip: text;
+    background-clip: text;
+
+    color: transparent;
 }
 
 .welcome p {
-    color: #9aa4c5;
-}
 
-.message {
-    display: flex;
-    margin: 15px 0;
-}
+    color: var(--muted);
 
-.message.user {
-    justify-content: flex-end;
-}
+    max-width: 560px;
 
-.bubble {
-    max-width: 75%;
-    padding: 13px 17px;
-    border-radius: 17px;
-    line-height: 1.5;
-    white-space: pre-wrap;
-    word-break: break-word;
+    line-height: 1.6;
 }
-
-.message.user .bubble {
-    background: rgba(43, 103, 255, 0.45);
-    border-bottom-right-radius: 5px;
-}
-
-.message.ai .bubble {
-    background: rgba(255,255,255,0.07);
-    border-bottom-left-radius: 5px;
-}
-
-/* ================= SUGGESTIONS ================= */
 
 .suggestions {
+
     display: flex;
-    justify-content: center;
-    gap: 10px;
+
     flex-wrap: wrap;
-    padding: 0 20px 12px;
+
+    justify-content: center;
+
+    gap: 9px;
+
+    margin-top: 25px;
 }
 
 .suggestion {
-    padding: 9px 14px;
+
+    border:
+        1px solid var(--border);
+
+    background:
+        rgba(255,255,255,0.04);
+
+    color: #c9d3e9;
+
+    padding: 9px 13px;
+
     border-radius: 20px;
-    border: 1px solid rgba(255,255,255,0.1);
-    background: rgba(255,255,255,0.05);
-    color: #dce3ff;
+
     cursor: pointer;
+
+    font-size: 12px;
+
     transition: 0.2s;
 }
 
 .suggestion:hover {
-    background: rgba(60,110,255,0.2);
+
+    background:
+        rgba(91,140,255,0.13);
+
+    border-color:
+        rgba(91,140,255,0.25);
+
+    color: white;
 }
 
-/* ================= VIDEO BUTTON ================= */
+.message {
 
-.video-toggle {
-    display: block;
-    margin: 0 auto 10px;
-    padding: 9px 16px;
-    border: 1px solid rgba(100,150,255,0.25);
-    border-radius: 20px;
-    background: rgba(40,90,255,0.14);
-    color: #dce6ff;
-    cursor: pointer;
-    transition: 0.2s;
+    display: flex;
+
+    margin-bottom: 20px;
 }
 
-.video-toggle:hover {
-    background: rgba(40,90,255,0.3);
+.message.user {
+
+    justify-content: flex-end;
 }
 
-/* ================= VIDEO PANEL ================= */
+.bubble {
 
-.video-panel {
-    width: min(700px, 90%);
-    margin: 0 auto 12px;
-    padding: 15px;
-    background: rgba(5, 12, 35, 0.9);
-    border: 1px solid rgba(255,255,255,0.09);
+    max-width: 78%;
+
+    padding: 13px 16px;
+
     border-radius: 17px;
-    backdrop-filter: blur(20px);
-    display: none;
+
+    line-height: 1.55;
+
+    font-size: 14px;
+
+    white-space: pre-wrap;
+
+    word-wrap: break-word;
 }
 
-.video-panel.show {
-    display: block;
+.message.user .bubble {
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(91,140,255,0.25),
+            rgba(123,97,255,0.22)
+        );
+
+    border:
+        1px solid
+        rgba(91,140,255,0.20);
+
+    border-bottom-right-radius: 5px;
 }
 
-.video-title {
-    font-weight: bold;
-    margin-bottom: 10px;
+.message.assistant .bubble {
+
+    background:
+        rgba(255,255,255,0.055);
+
+    border:
+        1px solid var(--border);
+
+    border-bottom-left-radius: 5px;
 }
 
-.video-prompt {
-    width: 100%;
-    min-height: 80px;
-    resize: vertical;
-    border: 1px solid rgba(255,255,255,0.1);
-    border-radius: 12px;
-    padding: 12px;
-    outline: none;
-    background: rgba(255,255,255,0.06);
-    color: white;
-    font-family: inherit;
+.bubble strong {
+
+    font-weight: 700;
 }
-
-.video-prompt::placeholder {
-    color: #7f89aa;
-}
-
-.video-options {
-    display: flex;
-    gap: 10px;
-    margin-top: 10px;
-    flex-wrap: wrap;
-}
-
-.video-options label {
-    color: #9da8c8;
-    font-size: 13px;
-}
-
-.video-options select {
-    margin-left: 5px;
-    background: #0c1538;
-    color: white;
-    border: 1px solid rgba(255,255,255,0.1);
-    padding: 7px 10px;
-    border-radius: 8px;
-}
-
-.video-generate {
-    width: 100%;
-    margin-top: 12px;
-    padding: 11px;
-    border: none;
-    border-radius: 11px;
-    background: linear-gradient(90deg, #315eff, #704cff);
-    color: white;
-    font-weight: bold;
-    cursor: pointer;
-}
-
-.video-generate:disabled {
-    opacity: 0.55;
-    cursor: not-allowed;
-}
-
-.video-status {
-    text-align: center;
-    color: #9da8c8;
-    margin-top: 10px;
-    font-size: 13px;
-}
-
-/* ================= VIDEO RESULT ================= */
-
-.video-result {
-    margin-top: 12px;
-}
-
-.generated-video {
-    width: 100%;
-    max-width: 600px;
-    border-radius: 14px;
-    display: block;
-    margin-top: 10px;
-    background: black;
-}
-
-.download-video {
-    display: inline-block;
-    margin-top: 10px;
-    padding: 8px 13px;
-    border-radius: 9px;
-    background: rgba(50,100,255,0.25);
-    color: white;
-    text-decoration: none;
-    font-size: 13px;
-}
-
-/* ================= INPUT ================= */
-
-.input-area {
-    padding: 10px 8% 20px;
-}
-
-.input-box {
-    display: flex;
-    align-items: flex-end;
-    gap: 8px;
-    max-width: 900px;
-    margin: auto;
-    padding: 8px;
-    border-radius: 17px;
-    background: rgba(10, 20, 50, 0.8);
-    border: 1px solid rgba(255,255,255,0.1);
-    backdrop-filter: blur(18px);
-}
-
-#messageInput {
-    flex: 1;
-    min-height: 42px;
-    max-height: 150px;
-    resize: none;
-    border: none;
-    outline: none;
-    background: transparent;
-    color: white;
-    padding: 11px;
-    font-family: inherit;
-    font-size: 15px;
-}
-
-#messageInput::placeholder {
-    color: #7f89aa;
-}
-
-.attach {
-    display: flex !important;
-    visibility: visible !important;
-    opacity: 1 !important;
-    position: relative !important;
-    z-index: 99999 !important;
-
-    width: 42px;
-    height: 42px;
-    align-items: center;
-    justify-content: center;
-    border-radius: 12px;
-    cursor: pointer;
-    background: rgba(255,255,255,0.06);
-    font-size: 20px;
-}
-
-.attach:hover {
-    background: rgba(255,255,255,0.12);
-}
-
-.send {
-    width: 42px;
-    height: 42px;
-    border: none;
-    border-radius: 12px;
-    background: #315eff;
-    color: white;
-    cursor: pointer;
-    font-size: 19px;
-}
-
-.send:hover {
-    background: #416cff;
-}
-
-.file-preview {
-    max-width: 900px;
-    margin: 7px auto 0;
-    padding: 7px 10px;
-    background: rgba(255,255,255,0.05);
-    border-radius: 10px;
-    display: none;
-    align-items: center;
-    justify-content: space-between;
-    font-size: 13px;
-}
-
-.file-preview.show {
-    display: flex;
-}
-
-.remove-file {
-    border: none;
-    background: transparent;
-    color: #ff7070;
-    cursor: pointer;
-    font-size: 16px;
-}
-
-/* ================= TYPING ================= */
 
 .typing {
-    display: flex;
+
+    display: inline-flex;
+
     gap: 5px;
-    padding: 5px;
+
+    align-items: center;
 }
 
 .typing span {
-    width: 7px;
-    height: 7px;
+
+    width: 6px;
+    height: 6px;
+
+    background: #9bb4ff;
+
     border-radius: 50%;
-    background: #9ca9ff;
-    animation: typing 1s infinite alternate;
+
+    animation:
+        typing 1.2s infinite;
 }
 
 .typing span:nth-child(2) {
-    animation-delay: .2s;
+    animation-delay: .15s;
 }
 
 .typing span:nth-child(3) {
-    animation-delay: .4s;
+    animation-delay: .3s;
 }
 
 @keyframes typing {
-    from { opacity: .2; transform: translateY(2px); }
-    to { opacity: 1; transform: translateY(-2px); }
+
+    0%, 60%, 100% {
+        opacity: .25;
+        transform: translateY(0);
+    }
+
+    30% {
+        opacity: 1;
+        transform: translateY(-3px);
+    }
 }
 
-/* ================= MOBILE ================= */
+/* =========================
+   COMPOSER
+========================= */
+
+.composer-wrap {
+
+    position: fixed;
+
+    left: 270px;
+    right: 0;
+    bottom: 0;
+
+    padding: 20px 20px 22px;
+
+    background:
+        linear-gradient(
+            transparent,
+            rgba(3,8,25,0.94) 35%
+        );
+}
+
+.composer {
+
+    width: min(900px, 100%);
+
+    margin: auto;
+
+    display: flex;
+
+    align-items: flex-end;
+
+    gap: 8px;
+
+    padding: 9px;
+
+    border:
+        1px solid
+        rgba(255,255,255,0.13);
+
+    border-radius: 18px;
+
+    background:
+        rgba(8,16,39,0.80);
+
+    backdrop-filter:
+        blur(20px);
+
+    box-shadow:
+        0 15px 50px
+        rgba(0,0,0,0.3);
+}
+
+.attach-btn,
+.video-btn {
+
+    flex: 0 0 auto;
+
+    width: 42px;
+    height: 42px;
+
+    border: 0;
+
+    border-radius: 12px;
+
+    background:
+        rgba(255,255,255,0.06);
+
+    color: #b8c4df;
+
+    cursor: pointer;
+
+    font-size: 18px;
+}
+
+.attach-btn:hover,
+.video-btn:hover {
+
+    background:
+        rgba(255,255,255,0.11);
+
+    color: white;
+}
+
+#messageInput {
+
+    flex: 1;
+
+    min-height: 42px;
+
+    max-height: 130px;
+
+    resize: none;
+
+    border: 0;
+
+    outline: none;
+
+    background: transparent;
+
+    color: white;
+
+    padding: 11px 7px;
+
+    font-size: 14px;
+
+    font-family: inherit;
+}
+
+#messageInput::placeholder {
+
+    color: #687694;
+}
+
+.send-btn {
+
+    width: 44px;
+    height: 42px;
+
+    border: 0;
+
+    border-radius: 12px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #5b8cff,
+            #7b61ff
+        );
+
+    color: white;
+
+    cursor: pointer;
+
+    font-size: 17px;
+
+    font-weight: 700;
+}
+
+.send-btn:hover {
+
+    filter: brightness(1.1);
+}
+
+.send-btn:disabled {
+
+    opacity: .45;
+
+    cursor: not-allowed;
+}
+
+.file-name {
+
+    width: min(900px, 100%);
+
+    margin: 7px auto 0;
+
+    color: #93a3c3;
+
+    font-size: 11px;
+
+    padding-left: 8px;
+}
+
+/* =========================
+   VIDEO PANEL
+========================= */
+
+.video-panel {
+
+    position: fixed;
+
+    inset: 0;
+
+    display: none;
+
+    align-items: center;
+
+    justify-content: center;
+
+    padding: 20px;
+
+    background:
+        rgba(0,0,0,0.72);
+
+    backdrop-filter:
+        blur(12px);
+
+    z-index: 100;
+}
+
+.video-panel.show {
+
+    display: flex;
+}
+
+.video-card {
+
+    width: min(520px, 100%);
+
+    padding: 22px;
+
+    border:
+        1px solid var(--border);
+
+    border-radius: 20px;
+
+    background:
+        rgba(7,14,34,0.96);
+
+    box-shadow:
+        0 30px 100px
+        rgba(0,0,0,0.55);
+}
+
+.video-card h2 {
+
+    margin-bottom: 7px;
+}
+
+.video-card p {
+
+    color: var(--muted);
+
+    font-size: 12px;
+
+    margin-bottom: 17px;
+}
+
+.video-card textarea {
+
+    width: 100%;
+
+    height: 110px;
+
+    resize: vertical;
+
+    border:
+        1px solid var(--border);
+
+    outline: none;
+
+    border-radius: 12px;
+
+    background:
+        rgba(255,255,255,0.04);
+
+    color: white;
+
+    padding: 12px;
+
+    font-family: inherit;
+}
+
+.video-options {
+
+    display: flex;
+
+    gap: 9px;
+
+    margin-top: 10px;
+}
+
+.video-options select {
+
+    flex: 1;
+
+    border:
+        1px solid var(--border);
+
+    background:
+        rgba(255,255,255,0.05);
+
+    color: white;
+
+    padding: 10px;
+
+    border-radius: 10px;
+
+    outline: none;
+}
+
+.video-options option {
+
+    background: #071022;
+}
+
+.video-actions {
+
+    display: flex;
+
+    gap: 9px;
+
+    margin-top: 15px;
+}
+
+.primary-btn,
+.secondary-btn {
+
+    flex: 1;
+
+    padding: 11px;
+
+    border-radius: 11px;
+
+    border: 0;
+
+    cursor: pointer;
+
+    font-weight: 600;
+}
+
+.primary-btn {
+
+    background:
+        linear-gradient(
+            135deg,
+            #5b8cff,
+            #7b61ff
+        );
+
+    color: white;
+}
+
+.secondary-btn {
+
+    background:
+        rgba(255,255,255,0.06);
+
+    color: #ccd6ea;
+}
+
+.video-result {
+
+    margin-top: 18px;
+}
+
+.video-result video {
+
+    width: 100%;
+
+    border-radius: 12px;
+}
+
+/* =========================
+   AUTH MODAL
+========================= */
+
+.modal {
+
+    position: fixed;
+
+    inset: 0;
+
+    display: none;
+
+    align-items: center;
+
+    justify-content: center;
+
+    padding: 20px;
+
+    background:
+        rgba(0,0,0,0.72);
+
+    backdrop-filter:
+        blur(10px);
+
+    z-index: 200;
+}
+
+.modal.show {
+
+    display: flex;
+}
+
+.auth-card {
+
+    width: min(410px, 100%);
+
+    padding: 25px;
+
+    border:
+        1px solid var(--border);
+
+    border-radius: 20px;
+
+    background:
+        rgba(7,14,34,0.97);
+
+    box-shadow:
+        0 30px 100px
+        rgba(0,0,0,0.5);
+}
+
+.auth-card h2 {
+
+    margin-bottom: 6px;
+}
+
+.auth-card p {
+
+    color: var(--muted);
+
+    font-size: 12px;
+
+    margin-bottom: 20px;
+}
+
+.auth-card input {
+
+    width: 100%;
+
+    margin-bottom: 10px;
+
+    padding: 12px;
+
+    border:
+        1px solid var(--border);
+
+    border-radius: 11px;
+
+    outline: none;
+
+    background:
+        rgba(255,255,255,0.04);
+
+    color: white;
+}
+
+.auth-card input:focus {
+
+    border-color:
+        rgba(91,140,255,0.45);
+}
+
+.auth-submit {
+
+    width: 100%;
+
+    padding: 12px;
+
+    border: 0;
+
+    border-radius: 11px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #5b8cff,
+            #7b61ff
+        );
+
+    color: white;
+
+    font-weight: 700;
+
+    cursor: pointer;
+}
+
+.auth-switch {
+
+    margin-top: 15px;
+
+    text-align: center;
+
+    color: #8392af;
+
+    font-size: 12px;
+}
+
+.auth-switch button {
+
+    border: 0;
+
+    background: transparent;
+
+    color: #8eacff;
+
+    cursor: pointer;
+}
+
+.close-modal {
+
+    float: right;
+
+    border: 0;
+
+    background: transparent;
+
+    color: #94a3c4;
+
+    cursor: pointer;
+
+    font-size: 18px;
+}
+
+/* =========================
+   PREMIUM MODAL
+========================= */
+
+.premium-modal {
+
+    position: fixed;
+
+    inset: 0;
+
+    display: none;
+
+    align-items: center;
+
+    justify-content: center;
+
+    padding: 20px;
+
+    background:
+        rgba(0,0,0,0.76);
+
+    backdrop-filter:
+        blur(12px);
+
+    z-index: 150;
+}
+
+.premium-modal.show {
+
+    display: flex;
+}
+
+.premium-box {
+
+    width: min(900px, 100%);
+
+    max-height: 90vh;
+
+    overflow-y: auto;
+
+    padding: 25px;
+
+    border:
+        1px solid
+        rgba(125,145,255,0.18);
+
+    border-radius: 24px;
+
+    background:
+        rgba(6,13,33,0.97);
+
+    box-shadow:
+        0 30px 100px
+        rgba(0,0,0,0.55);
+}
+
+.premium-head {
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    margin-bottom: 22px;
+}
+
+.premium-head h2 {
+
+    font-size: 25px;
+}
+
+.premium-head p {
+
+    color: var(--muted);
+
+    font-size: 12px;
+
+    margin-top: 5px;
+}
+
+.close-premium {
+
+    border: 0;
+
+    background:
+        rgba(255,255,255,0.06);
+
+    color: white;
+
+    width: 35px;
+    height: 35px;
+
+    border-radius: 10px;
+
+    cursor: pointer;
+}
+
+.plans {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, 1fr);
+
+    gap: 14px;
+}
+
+.plan-card {
+
+    position: relative;
+
+    padding: 22px;
+
+    border:
+        1px solid var(--border);
+
+    border-radius: 18px;
+
+    background:
+        rgba(255,255,255,0.035);
+}
+
+.plan-card.featured {
+
+    border-color:
+        rgba(123,97,255,0.4);
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(91,140,255,0.10),
+            rgba(123,97,255,0.10)
+        );
+}
+
+.popular {
+
+    position: absolute;
+
+    top: 12px;
+    right: 12px;
+
+    font-size: 9px;
+
+    font-weight: 800;
+
+    padding: 5px 8px;
+
+    border-radius: 20px;
+
+    background:
+        rgba(123,97,255,0.18);
+
+    color: #b5a6ff;
+}
+
+.plan-icon {
+
+    font-size: 27px;
+
+    margin-bottom: 9px;
+}
+
+.plan-card h3 {
+
+    font-size: 20px;
+
+    margin-bottom: 5px;
+}
+
+.plan-price {
+
+    font-size: 28px;
+
+    font-weight: 800;
+
+    margin: 10px 0 15px;
+}
+
+.plan-price span {
+
+    color: var(--muted);
+
+    font-size: 11px;
+
+    font-weight: 400;
+}
+
+.features {
+
+    list-style: none;
+
+    margin-bottom: 18px;
+}
+
+.features li {
+
+    color: #aebbd4;
+
+    font-size: 12px;
+
+    margin-bottom: 9px;
+}
+
+.features li::before {
+
+    content: "✓";
+
+    color: #73e0aa;
+
+    margin-right: 7px;
+}
+
+.plan-btn {
+
+    width: 100%;
+
+    padding: 11px;
+
+    border-radius: 10px;
+
+    border:
+        1px solid var(--border);
+
+    background:
+        rgba(255,255,255,0.06);
+
+    color: white;
+
+    cursor: pointer;
+
+    font-weight: 700;
+}
+
+.plan-btn.primary {
+
+    border: 0;
+
+    background:
+        linear-gradient(
+            135deg,
+            #5b8cff,
+            #7b61ff
+        );
+}
+
+.plan-btn.current {
+
+    opacity: .55;
+
+    cursor: default;
+}
+
+/* =========================
+   CONFIRM DELETE
+========================= */
+
+.confirm-overlay {
+
+    position: fixed;
+
+    inset: 0;
+
+    display: none;
+
+    align-items: center;
+
+    justify-content: center;
+
+    padding: 20px;
+
+    background:
+        rgba(0,0,0,0.7);
+
+    backdrop-filter:
+        blur(8px);
+
+    z-index: 300;
+}
+
+.confirm-overlay.show {
+
+    display: flex;
+}
+
+.confirm-box {
+
+    width: min(360px, 100%);
+
+    padding: 23px;
+
+    border:
+        1px solid var(--border);
+
+    border-radius: 18px;
+
+    background:
+        rgba(7,14,34,0.98);
+
+    box-shadow:
+        0 30px 90px
+        rgba(0,0,0,0.5);
+}
+
+.confirm-box h3 {
+
+    margin-bottom: 8px;
+}
+
+.confirm-box p {
+
+    color: var(--muted);
+
+    font-size: 12px;
+
+    line-height: 1.5;
+
+    margin-bottom: 18px;
+}
+
+.confirm-actions {
+
+    display: flex;
+
+    gap: 8px;
+}
+
+.confirm-actions button {
+
+    flex: 1;
+
+    padding: 10px;
+
+    border-radius: 10px;
+
+    border: 0;
+
+    cursor: pointer;
+}
+
+.cancel-btn {
+
+    background:
+        rgba(255,255,255,0.06);
+
+    color: white;
+}
+
+.delete-btn {
+
+    background:
+        rgba(255,70,100,0.15);
+
+    color: #ff7893;
+
+    border:
+        1px solid
+        rgba(255,70,100,0.18) !important;
+}
+
+/* =========================
+   TOAST
+========================= */
+
+.toast {
+
+    position: fixed;
+
+    left: 50%;
+
+    bottom: 95px;
+
+    transform:
+        translate(-50%, 20px);
+
+    opacity: 0;
+
+    pointer-events: none;
+
+    padding: 10px 15px;
+
+    border-radius: 10px;
+
+    background:
+        rgba(7,14,34,0.96);
+
+    border:
+        1px solid var(--border);
+
+    color: white;
+
+    font-size: 12px;
+
+    transition: .25s;
+
+    z-index: 500;
+}
+
+.toast.show {
+
+    opacity: 1;
+
+    transform:
+        translate(-50%, 0);
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media (max-width: 800px) {
+
+    .sidebar {
+
+        width: 220px;
+    }
+
+    .composer-wrap {
+
+        left: 220px;
+    }
+
+    .plans {
+
+        grid-template-columns: 1fr;
+    }
+}
 
 @media (max-width: 700px) {
 
     .sidebar {
+
         display: none;
     }
 
-    .chat {
-        padding: 25px 15px;
-    }
+    .composer-wrap {
 
-    .welcome h1 {
-        font-size: 32px;
-    }
-
-    .bubble {
-        max-width: 88%;
-    }
-
-    .input-area {
-        padding: 10px 10px 15px;
-    }
-
-    .video-panel {
-        width: calc(100% - 20px);
+        left: 0;
     }
 
     .topbar {
-        padding: 0 15px;
+
+        padding: 0 14px;
+    }
+
+    .chat-area {
+
+        padding-left: 12px;
+        padding-right: 12px;
+    }
+
+    .bubble {
+
+        max-width: 88%;
+    }
+
+    .brand {
+
+        font-size: 16px;
     }
 }
+
 </style>
+
 </head>
 
 <body>
 
 <div class="app">
 
-    <!-- SIDEBAR -->
+    <!-- ================= SIDEBAR ================= -->
+
     <aside class="sidebar">
 
-        <div class="logo">JAXX</div>
+        <div class="logo">
+            JAXX AI
+        </div>
 
-        <button class="new-chat" onclick="newChat()">
+        <button
+            class="new-chat"
+            onclick="createNewConversation()"
+        >
             ＋ New Chat
         </button>
+
+        <div
+            id="chatList"
+            class="chat-list"
+        ></div>
 
         <div class="sidebar-footer">
             Created & developed by Ansh 😎
@@ -482,669 +1731,2474 @@ body {
 
     </aside>
 
+    <!-- ================= MAIN ================= -->
 
-    <!-- MAIN -->
     <main class="main">
 
         <header class="topbar">
-            <div class="top-title">JAXX AI</div>
-            <div class="online">● Online</div>
-        </header>
 
+            <div>
 
-        <!-- CHAT -->
-        <section class="chat" id="chat">
+                <span class="brand">
+                    JAXX AI
+                </span>
 
-            <div class="welcome" id="welcome">
-                <h1>Hey 👋 I'm JAXX</h1>
-                <p>Your AI assistant — ask me anything.</p>
-            </div>
-
-        </section>
-
-
-        <!-- INPUT AREA -->
-        <div class="input-area">
-
-            <!-- SUGGESTIONS -->
-            <div class="suggestions" id="suggestions">
-
-                <button class="suggestion"
-                    onclick="useSuggestion('Explain something in simple words')">
-                    Explain something
-                </button>
-
-                <button class="suggestion"
-                    onclick="useSuggestion('Help me with coding')">
-                    Help with coding
-                </button>
-
-                <button class="suggestion"
-                    onclick="useSuggestion('Give me some creative ideas')">
-                    Give me ideas
-                </button>
+                <span class="status">
+                    ● Online
+                </span>
 
             </div>
 
-
-            <!-- VIDEO TOGGLE -->
-            <button class="video-toggle" onclick="toggleVideoPanel()">
-                🎬 Create AI Video
-            </button>
-
-
-            <!-- VIDEO GENERATOR -->
-            <div class="video-panel" id="videoPanel">
-
-                <div class="video-title">
-                    🎬 JAXX AI Video Generator
-                </div>
-
-                <textarea
-                    id="videoPrompt"
-                    class="video-prompt"
-                    placeholder="Describe the video you want...&#10;&#10;Example: A futuristic city at night, neon lights, cinematic camera movement..."
-                    maxlength="2000"></textarea>
-
-                <div class="video-options">
-
-                    <label>
-                        Duration:
-                        <select id="videoDuration">
-                            <option value="2">2 seconds</option>
-                            <option value="5" selected>5 seconds</option>
-                            <option value="10">10 seconds</option>
-                        </select>
-                    </label>
-
-                    <label>
-                        Ratio:
-                        <select id="videoRatio">
-                            <option value="1280:720" selected>16:9 Landscape</option>
-                            <option value="720:1280">9:16 Portrait</option>
-                        </select>
-                    </label>
-
-                </div>
+            <div class="account-wrap">
 
                 <button
-                    class="video-generate"
-                    id="generateVideoBtn"
-                    onclick="generateVideo()">
-                    ✨ Generate Video
+                    class="account-btn"
+                    onclick="toggleAccountMenu()"
+                >
+                    👤
+                    <span id="accountButtonText">
+                        Account
+                    </span>
+                    ▾
                 </button>
 
-                <div class="video-status" id="videoStatus"></div>
+                <div
+                    id="accountMenu"
+                    class="account-menu"
+                >
+
+                    <div
+                        id="accountInfo"
+                        class="account-info"
+                    >
+                        <div class="account-name">
+                            Guest
+                        </div>
+
+                        <div class="account-email">
+                            Login to use JAXX AI
+                        </div>
+                    </div>
+
+                    <button
+                        class="menu-btn"
+                        onclick="openPremiumModal()"
+                    >
+                        💎 Premium Plans
+                    </button>
+
+                    <button
+                        id="loginMenuBtn"
+                        class="menu-btn"
+                        onclick="openAuth('login')"
+                    >
+                        🔐 Login
+                    </button>
+
+                    <button
+                        id="signupMenuBtn"
+                        class="menu-btn"
+                        onclick="openAuth('signup')"
+                    >
+                        ✨ Create Account
+                    </button>
+
+                    <button
+                        id="logoutMenuBtn"
+                        class="menu-btn logout"
+                        onclick="logout()"
+                        style="display:none"
+                    >
+                        🚪 Logout
+                    </button>
+
+                </div>
 
             </div>
 
+        </header>
 
-            <!-- FILE PREVIEW -->
-            <div class="file-preview" id="filePreview">
-                <span id="fileName"></span>
-                <button class="remove-file" onclick="removeFile()">✕</button>
-            </div>
+        <!-- ================= CHAT AREA ================= -->
 
+        <section
+            id="chatArea"
+            class="chat-area"
+        >
 
-            <!-- MESSAGE INPUT -->
-            <div class="input-box">
+            <div
+                id="messages"
+                class="messages"
+            ></div>
 
-                <label class="attach" title="Attach file">
-                    📎
-                    <input
-                        type="file"
-                        id="fileInput"
-                        hidden
-                        onchange="handleFile(this)">
-                </label>
-
-                <textarea
-                    id="messageInput"
-                    placeholder="Message JAXX..."
-                    rows="1"></textarea>
-
-                <button class="send" onclick="sendMessage()">
-                    ➤
-                </button>
-
-            </div>
-
-        </div>
+        </section>
 
     </main>
 
 </div>
 
+<!-- ================= COMPOSER ================= -->
+
+<div class="composer-wrap">
+
+    <div class="composer">
+
+        <button
+            class="attach-btn"
+            onclick="handleFileButton()"
+            title="Upload file"
+        >
+            📎
+        </button>
+
+        <input
+            id="fileInput"
+            type="file"
+            hidden
+            onchange="handleFileSelected()"
+        >
+
+        <button
+            class="video-btn"
+            onclick="openVideoPanel()"
+            title="Generate video"
+        >
+            🎬
+        </button>
+
+        <textarea
+            id="messageInput"
+            rows="1"
+            placeholder="Message JAXX AI..."
+            onkeydown="handleInputKey(event)"
+        ></textarea>
+
+        <button
+            id="sendButton"
+            class="send-btn"
+            onclick="sendMessage()"
+        >
+            ➤
+        </button>
+
+    </div>
+
+    <div
+        id="fileName"
+        class="file-name"
+    ></div>
+
+</div>
+
+<!-- ================= AUTH MODAL ================= -->
+
+<div
+    id="authModal"
+    class="modal"
+>
+
+    <div class="auth-card">
+
+        <button
+            class="close-modal"
+            onclick="closeAuth()"
+        >
+            ✕
+        </button>
+
+        <h2 id="authTitle">
+            Welcome back
+        </h2>
+
+        <p id="authSubtitle">
+            Login to continue using JAXX AI.
+        </p>
+
+        <input
+            id="authName"
+            type="text"
+            placeholder="Your name"
+            style="display:none"
+        >
+
+        <input
+            id="authEmail"
+            type="email"
+            placeholder="Email"
+        >
+
+        <input
+            id="authPassword"
+            type="password"
+            placeholder="Password"
+        >
+
+        <button
+            class="auth-submit"
+            onclick="submitAuth()"
+        >
+            Continue
+        </button>
+
+        <div class="auth-switch">
+
+            <span id="authSwitchText">
+                Don't have an account?
+            </span>
+
+            <button
+                onclick="switchAuthMode()"
+                id="authSwitchButton"
+            >
+                Sign up
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- ================= PREMIUM MODAL ================= -->
+
+<div
+    id="premiumModal"
+    class="premium-modal"
+>
+
+    <div class="premium-box">
+
+        <div class="premium-head">
+
+            <div>
+
+                <h2>
+                    💎 JAXX AI Premium
+                </h2>
+
+                <p>
+                    Unlock more powerful features.
+                </p>
+
+            </div>
+
+            <button
+                class="close-premium"
+                onclick="closePremiumModal()"
+            >
+                ✕
+            </button>
+
+        </div>
+
+        <div class="plans">
+
+            <!-- FREE -->
+
+            <div class="plan-card">
+
+                <div class="plan-icon">
+                    🆓
+                </div>
+
+                <h3>
+                    Free
+                </h3>
+
+                <div class="plan-price">
+                    ₹0
+                    <span>
+                        / forever
+                    </span>
+                </div>
+
+                <ul class="features">
+
+                    <li>
+                        AI chat
+                    </li>
+
+                    <li>
+                        Chat history
+                    </li>
+
+                    <li>
+                        Basic access
+                    </li>
+
+                    <li>
+                        Video generation locked
+                    </li>
+
+                </ul>
+
+                <button
+                    id="freePlanButton"
+                    class="plan-btn current"
+                >
+                    Current Plan
+                </button>
+
+            </div>
+
+            <!-- PRO -->
+
+            <div class="plan-card featured">
+
+                <div class="popular">
+                    POPULAR
+                </div>
+
+                <div class="plan-icon">
+                    ⭐
+                </div>
+
+                <h3>
+                    Pro
+                </h3>
+
+                <div class="plan-price">
+                    ₹199
+                    <span>
+                        / month
+                    </span>
+                </div>
+
+                <ul class="features">
+
+                    <li>
+                        Everything in Free
+                    </li>
+
+                    <li>
+                        File & image analysis
+                    </li>
+
+                    <li>
+                        AI video generation
+                    </li>
+
+                    <li>
+                        Higher usage limits
+                    </li>
+
+                </ul>
+
+                <button
+                    class="plan-btn primary"
+                    onclick="upgradePlan('pro')"
+                >
+                    Upgrade to Pro
+                </button>
+
+            </div>
+
+            <!-- PRO PLUS -->
+
+            <div class="plan-card">
+
+                <div class="plan-icon">
+                    👑
+                </div>
+
+                <h3>
+                    Pro+
+                </h3>
+
+                <div class="plan-price">
+                    ₹399
+                    <span>
+                        / month
+                    </span>
+                </div>
+
+                <ul class="features">
+
+                    <li>
+                        Everything in Pro
+                    </li>
+
+                    <li>
+                        Highest limits
+                    </li>
+
+                    <li>
+                        Priority features
+                    </li>
+
+                    <li>
+                        Premium experience
+                    </li>
+
+                </ul>
+
+                <button
+                    class="plan-btn primary"
+                    onclick="upgradePlan('pro_plus')"
+                >
+                    Upgrade to Pro+
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- ================= VIDEO PANEL ================= -->
+
+<div
+    id="videoPanel"
+    class="video-panel"
+>
+
+    <div class="video-card">
+
+        <h2>
+            🎬 Generate Video
+        </h2>
+
+        <p>
+            Create an AI video with JAXX AI.
+        </p>
+
+        <textarea
+            id="videoPrompt"
+            placeholder="Example: A futuristic city at night with flying cars..."
+        ></textarea>
+
+        <div class="video-options">
+
+            <select id="videoDuration">
+
+                <option value="5">
+                    5 seconds
+                </option>
+
+                <option value="6">
+                    6 seconds
+                </option>
+
+                <option value="8">
+                    8 seconds
+                </option>
+
+                <option value="10">
+                    10 seconds
+                </option>
+
+            </select>
+
+            <select id="videoRatio">
+
+                <option value="1280:720">
+                    Landscape
+                </option>
+
+                <option value="720:1280">
+                    Portrait
+                </option>
+
+            </select>
+
+        </div>
+
+        <div class="video-actions">
+
+            <button
+                class="secondary-btn"
+                onclick="closeVideoPanel()"
+            >
+                Cancel
+            </button>
+
+            <button
+                class="primary-btn"
+                onclick="generateVideo()"
+            >
+                Generate
+            </button>
+
+        </div>
+
+        <div
+            id="videoResult"
+            class="video-result"
+        ></div>
+
+    </div>
+
+</div>
+
+<!-- ================= DELETE CONFIRM ================= -->
+
+<div
+    id="confirmOverlay"
+    class="confirm-overlay"
+>
+
+    <div class="confirm-box">
+
+        <h3>
+            Delete this chat?
+        </h3>
+
+        <p>
+            Ye chat permanently delete ho jayegi.
+            Is action ko undo nahi kiya ja sakta.
+        </p>
+
+        <div class="confirm-actions">
+
+            <button
+                class="cancel-btn"
+                onclick="closeDeleteConfirmation()"
+            >
+                Cancel
+            </button>
+
+            <button
+                class="delete-btn"
+                onclick="confirmDeleteChat()"
+            >
+                Delete
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- ================= TOAST ================= -->
+
+<div
+    id="toast"
+    class="toast"
+></div>
 
 <script>
 
-/* ================= VARIABLES ================= */
+/* =========================================================
+   STATE
+========================================================= */
 
-const chat = document.getElementById("chat");
-const input = document.getElementById("messageInput");
-const fileInput = document.getElementById("fileInput");
-const filePreview = document.getElementById("filePreview");
-const fileName = document.getElementById("fileName");
-const suggestions = document.getElementById("suggestions");
+let currentUser = null;
+let currentChatId = null;
 
 let selectedFile = null;
 
+let chatToDeleteId = null;
 
-/* ================= LOAD CHAT ================= */
+let authMode = "login";
 
-function loadChat() {
+/* =========================================================
+   ELEMENTS
+========================================================= */
 
-    const saved = localStorage.getItem("jaxx_messages");
+const messagesEl =
+    document.getElementById("messages");
 
-    if (!saved) return;
+const chatArea =
+    document.getElementById("chatArea");
 
-    try {
+const messageInput =
+    document.getElementById("messageInput");
 
-        const messages = JSON.parse(saved);
+const sendButton =
+    document.getElementById("sendButton");
 
-        if (!messages.length) return;
+const fileInput =
+    document.getElementById("fileInput");
 
-        document.getElementById("welcome")?.remove();
+const fileNameEl =
+    document.getElementById("fileName");
 
-        messages.forEach(message => {
-            addMessageToUI(message.role, message.content);
-        });
+/* =========================================================
+   INIT
+========================================================= */
 
-    } catch (error) {
+document.addEventListener(
+    "DOMContentLoaded",
+    async () => {
 
-        console.error("Chat history error:", error);
+        await checkUser();
 
     }
+);
 
-}
+/* =========================================================
+   TOAST
+========================================================= */
 
+function showToast(message) {
 
-/* ================= SAVE CHAT ================= */
+    const toast =
+        document.getElementById("toast");
 
-function saveMessage(role, content) {
+    toast.textContent =
+        message;
 
-    const messages =
-        JSON.parse(localStorage.getItem("jaxx_messages") || "[]");
+    toast.classList.add("show");
 
-    messages.push({
-        role,
-        content
-    });
-
-    localStorage.setItem(
-        "jaxx_messages",
-        JSON.stringify(messages)
+    setTimeout(
+        () => {
+            toast.classList.remove("show");
+        },
+        2600
     );
 }
 
-
-/* ================= ADD MESSAGE ================= */
-
-function addMessageToUI(role, content) {
-
-    const wrapper = document.createElement("div");
-
-    wrapper.className =
-        `message ${role === "user" ? "user" : "ai"}`;
-
-    const bubble = document.createElement("div");
-
-    bubble.className = "bubble";
-
-    bubble.textContent = content;
-
-    wrapper.appendChild(bubble);
-
-    chat.appendChild(wrapper);
-
-    chat.scrollTop = chat.scrollHeight;
-
-    return wrapper;
-}
-
-
-/* ================= TYPING ================= */
-
-function showTyping() {
-
-    const wrapper = document.createElement("div");
-
-    wrapper.className = "message ai";
-    wrapper.id = "typingMessage";
-
-    wrapper.innerHTML = `
-        <div class="bubble">
-            <div class="typing">
-                <span></span>
-                <span></span>
-                <span></span>
-            </div>
-        </div>
-    `;
-
-    chat.appendChild(wrapper);
-
-    chat.scrollTop = chat.scrollHeight;
-}
-
-
-function removeTyping() {
-
-    document.getElementById("typingMessage")?.remove();
-
-}
-
-
-/* ================= SUGGESTION ================= */
-
-function useSuggestion(text) {
-
-    input.value = text;
-
-    input.focus();
-
-}
-
-
-/* ================= FILE ================= */
-
-function handleFile(inputElement) {
-
-    const file = inputElement.files[0];
-
-    if (!file) return;
-
-    selectedFile = file;
-
-    fileName.textContent =
-        `📎 ${file.name}`;
-
-    filePreview.classList.add("show");
-
-}
-
-
-function removeFile() {
-
-    selectedFile = null;
-
-    fileInput.value = "";
-
-    filePreview.classList.remove("show");
-
-}
-
-
-/* ================= SEND MESSAGE ================= */
-
-async function sendMessage() {
-
-    const message = input.value.trim();
-
-    if (!message && !selectedFile) return;
-
-
-    document.getElementById("welcome")?.remove();
-
-    suggestions.style.display = "none";
-
-
-    if (message) {
-
-        addMessageToUI("user", message);
-
-        saveMessage("user", message);
-
-    }
-
-
-    showTyping();
-
-
-    try {
-
-        let response;
-
-
-        /* FILE UPLOAD */
-
-        if (selectedFile) {
-
-            const formData = new FormData();
-
-            formData.append("file", selectedFile);
-
-            formData.append("message", message);
-
-
-            response = await fetch("/api/upload", {
-                method: "POST",
-                body: formData
-            });
-
-
-        }
-
-        /* NORMAL CHAT */
-
-        else {
-
-            const messages =
-                JSON.parse(
-                    localStorage.getItem("jaxx_messages") || "[]"
-                );
-
-            response = await fetch("/api/chat", {
-
-                method: "POST",
-
-                headers: {
-                    "Content-Type": "application/json"
-                },
-
-                body: JSON.stringify({
-                    messages
-                })
-
-            });
-
-        }
-
-
-        const data = await response.json();
-
-        removeTyping();
-
-
-        if (!response.ok) {
-
-            throw new Error(
-                data.error || "Something went wrong"
-            );
-
-        }
-
-
-        const reply =
-            data.reply || "I couldn't generate a response.";
-
-
-        addMessageToUI("ai", reply);
-
-        saveMessage("assistant", reply);
-
-
-    } catch (error) {
-
-        removeTyping();
-
-        console.error(error);
-
-        const errorMessage =
-            "❌ " + (error.message || "Something went wrong.");
-
-        addMessageToUI("ai", errorMessage);
-
-    }
-
-
-    input.value = "";
-
-    removeFile();
-
-}
-
-
-/* ================= VIDEO PANEL ================= */
-
-function toggleVideoPanel() {
-
-    const panel =
-        document.getElementById("videoPanel");
-
-    panel.classList.toggle("show");
-
-}
-
-
-/* ================= GENERATE VIDEO ================= */
-
-async function generateVideo() {
-
-    const prompt =
-        document.getElementById("videoPrompt").value.trim();
-
-    const duration =
-        Number(
-            document.getElementById("videoDuration").value
-        );
-
-    const ratio =
-        document.getElementById("videoRatio").value;
-
-    const button =
-        document.getElementById("generateVideoBtn");
-
-    const status =
-        document.getElementById("videoStatus");
-
-
-    if (!prompt) {
-
-        status.textContent =
-            "⚠️ Pehle video ka prompt likho.";
-
-        return;
-
-    }
-
-
-    button.disabled = true;
-
-    button.textContent =
-        "⏳ Generating...";
-
-    status.textContent =
-        "🎬 JAXX is creating your video... This may take a little while.";
-
+/* =========================================================
+   AUTH
+========================================================= */
+
+async function checkUser() {
 
     try {
 
         const response =
-            await fetch("/api/generate-video", {
-
-                method: "POST",
-
-                headers: {
-                    "Content-Type": "application/json"
-                },
-
-                body: JSON.stringify({
-                    prompt,
-                    duration,
-                    ratio
-                })
-
-            });
-
+            await fetch(
+                "/api/me"
+            );
 
         const data =
             await response.json();
 
+        if (
+            data.loggedIn
+        ) {
 
-        if (!response.ok) {
+            currentUser =
+                data.user;
 
-            throw new Error(
-                data.error || "Video generation failed."
-            );
+            updateAccountUI();
+
+            await loadConversations();
+
+        } else {
+
+            currentUser =
+                null;
+
+            updateAccountUI();
+
+            showWelcome();
 
         }
-
-
-        if (!data.videoUrl) {
-
-            throw new Error(
-                "Video URL nahi mila."
-            );
-
-        }
-
-
-        status.textContent =
-            "✅ Video generated successfully!";
-
-
-        /* ADD VIDEO TO CHAT */
-
-        const wrapper =
-            document.createElement("div");
-
-        wrapper.className = "message ai";
-
-
-        const bubble =
-            document.createElement("div");
-
-        bubble.className = "bubble";
-
-
-        const title =
-            document.createElement("div");
-
-        title.textContent =
-            "🎬 Here's your generated video:";
-
-
-        const video =
-            document.createElement("video");
-
-        video.className =
-            "generated-video";
-
-        video.controls = true;
-
-        video.playsInline = true;
-
-        video.src =
-            data.videoUrl;
-
-
-        const download =
-            document.createElement("a");
-
-        download.className =
-            "download-video";
-
-        download.href =
-            data.videoUrl;
-
-        download.target =
-            "_blank";
-
-        download.rel =
-            "noopener noreferrer";
-
-        download.textContent =
-            "▶ Open Video";
-
-
-        bubble.appendChild(title);
-
-        bubble.appendChild(video);
-
-        bubble.appendChild(download);
-
-        wrapper.appendChild(bubble);
-
-        chat.appendChild(wrapper);
-
-
-        chat.scrollTop =
-            chat.scrollHeight;
-
 
     } catch (error) {
 
         console.error(error);
 
-        status.textContent =
-            "❌ " +
-            (error.message ||
-            "Video generation failed.");
+        showWelcome();
+    }
+}
 
+function updateAccountUI() {
+
+    const accountButtonText =
+        document.getElementById(
+            "accountButtonText"
+        );
+
+    const accountInfo =
+        document.getElementById(
+            "accountInfo"
+        );
+
+    const loginMenuBtn =
+        document.getElementById(
+            "loginMenuBtn"
+        );
+
+    const signupMenuBtn =
+        document.getElementById(
+            "signupMenuBtn"
+        );
+
+    const logoutMenuBtn =
+        document.getElementById(
+            "logoutMenuBtn"
+        );
+
+    if (currentUser) {
+
+        accountButtonText.textContent =
+            currentUser.name;
+
+        accountInfo.innerHTML = `
+
+            <div class="account-name">
+                ${escapeHtml(currentUser.name)}
+            </div>
+
+            <div class="account-email">
+                ${escapeHtml(currentUser.email)}
+            </div>
+
+            <div class="plan-badge">
+                ${getPlanLabel(currentUser.plan)}
+            </div>
+
+        `;
+
+        loginMenuBtn.style.display =
+            "none";
+
+        signupMenuBtn.style.display =
+            "none";
+
+        logoutMenuBtn.style.display =
+            "block";
+
+    } else {
+
+        accountButtonText.textContent =
+            "Account";
+
+        accountInfo.innerHTML = `
+
+            <div class="account-name">
+                Guest
+            </div>
+
+            <div class="account-email">
+                Login to use JAXX AI
+            </div>
+
+        `;
+
+        loginMenuBtn.style.display =
+            "block";
+
+        signupMenuBtn.style.display =
+            "block";
+
+        logoutMenuBtn.style.display =
+            "none";
+    }
+}
+
+function getPlanLabel(plan) {
+
+    if (plan === "pro") {
+        return "⭐ PRO";
     }
 
+    if (plan === "pro_plus") {
+        return "👑 PRO+";
+    }
 
-    button.disabled = false;
-
-    button.textContent =
-        "✨ Generate Video";
-
+    return "🆓 FREE";
 }
 
+function toggleAccountMenu() {
 
-/* ================= NEW CHAT ================= */
+    document
+        .getElementById("accountMenu")
+        .classList.toggle("show");
+}
 
-function newChat() {
+/* Close account menu when clicking outside */
 
-    localStorage.removeItem("jaxx_messages");
+document.addEventListener(
+    "click",
+    event => {
 
-    chat.innerHTML = `
-        <div class="welcome" id="welcome">
-            <h1>Hey 👋 I'm JAXX</h1>
-            <p>Your AI assistant — ask me anything.</p>
+        const wrap =
+            document.querySelector(
+                ".account-wrap"
+            );
+
+        if (
+            !wrap.contains(
+                event.target
+            )
+        ) {
+
+            document
+                .getElementById(
+                    "accountMenu"
+                )
+                .classList.remove(
+                    "show"
+                );
+        }
+    }
+);
+
+/* =========================================================
+   AUTH MODAL
+========================================================= */
+
+function openAuth(mode) {
+
+    authMode =
+        mode;
+
+    document
+        .getElementById(
+            "accountMenu"
+        )
+        .classList.remove(
+            "show"
+        );
+
+    document
+        .getElementById(
+            "authModal"
+        )
+        .classList.add(
+            "show"
+        );
+
+    updateAuthModal();
+}
+
+function closeAuth() {
+
+    document
+        .getElementById(
+            "authModal"
+        )
+        .classList.remove(
+            "show"
+        );
+}
+
+function switchAuthMode() {
+
+    authMode =
+        authMode === "login"
+            ? "signup"
+            : "login";
+
+    updateAuthModal();
+}
+
+function updateAuthModal() {
+
+    const title =
+        document.getElementById(
+            "authTitle"
+        );
+
+    const subtitle =
+        document.getElementById(
+            "authSubtitle"
+        );
+
+    const name =
+        document.getElementById(
+            "authName"
+        );
+
+    const switchText =
+        document.getElementById(
+            "authSwitchText"
+        );
+
+    const switchButton =
+        document.getElementById(
+            "authSwitchButton"
+        );
+
+    if (
+        authMode === "signup"
+    ) {
+
+        title.textContent =
+            "Create account";
+
+        subtitle.textContent =
+            "Create your JAXX AI account.";
+
+        name.style.display =
+            "block";
+
+        switchText.textContent =
+            "Already have an account?";
+
+        switchButton.textContent =
+            "Login";
+
+    } else {
+
+        title.textContent =
+            "Welcome back";
+
+        subtitle.textContent =
+            "Login to continue using JAXX AI.";
+
+        name.style.display =
+            "none";
+
+        switchText.textContent =
+            "Don't have an account?";
+
+        switchButton.textContent =
+            "Sign up";
+    }
+}
+
+async function submitAuth() {
+
+    const name =
+        document
+            .getElementById(
+                "authName"
+            )
+            .value
+            .trim();
+
+    const email =
+        document
+            .getElementById(
+                "authEmail"
+            )
+            .value
+            .trim();
+
+    const password =
+        document
+            .getElementById(
+                "authPassword"
+            )
+            .value;
+
+    if (!email || !password) {
+
+        showToast(
+            "Email aur password enter karo."
+        );
+
+        return;
+    }
+
+    if (
+        authMode === "signup" &&
+        !name
+    ) {
+
+        showToast(
+            "Name enter karo."
+        );
+
+        return;
+    }
+
+    try {
+
+        const endpoint =
+            authMode === "login"
+                ? "/api/login"
+                : "/api/signup";
+
+        const body =
+            authMode === "login"
+                ? {
+                    email,
+                    password
+                }
+                : {
+                    name,
+                    email,
+                    password
+                };
+
+        const response =
+            await fetch(
+                endpoint,
+                {
+                    method: "POST",
+
+                    headers: {
+                        "Content-Type":
+                            "application/json"
+                    },
+
+                    body:
+                        JSON.stringify(body)
+                }
+            );
+
+        const data =
+            await response.json();
+
+        if (!response.ok) {
+
+            showToast(
+                data.error ||
+                "Authentication failed."
+            );
+
+            return;
+        }
+
+        currentUser =
+            data.user;
+
+        closeAuth();
+
+        updateAccountUI();
+
+        showToast(
+            authMode === "login"
+                ? "Login successful 😎"
+                : "Account created successfully 🎉"
+        );
+
+        await loadConversations();
+
+    } catch (error) {
+
+        console.error(error);
+
+        showToast(
+            "Server se connection nahi ho paaya."
+        );
+    }
+}
+
+async function logout() {
+
+    try {
+
+        await fetch(
+            "/api/logout",
+            {
+                method: "POST"
+            }
+        );
+
+        currentUser =
+            null;
+
+        currentChatId =
+            null;
+
+        updateAccountUI();
+
+        showWelcome();
+
+        document
+            .getElementById(
+                "accountMenu"
+            )
+            .classList.remove(
+                "show"
+            );
+
+        showToast(
+            "Logout ho gaya."
+        );
+
+    } catch (error) {
+
+        console.error(error);
+    }
+}
+
+/* =========================================================
+   CONVERSATIONS
+========================================================= */
+
+async function loadConversations() {
+
+    if (!currentUser) {
+
+        showWelcome();
+
+        return;
+    }
+
+    try {
+
+        const response =
+            await fetch(
+                "/api/conversations"
+            );
+
+        if (
+            response.status === 401
+        ) {
+
+            currentUser =
+                null;
+
+            updateAccountUI();
+
+            showWelcome();
+
+            return;
+        }
+
+        const data =
+            await response.json();
+
+        renderChatList(
+            data.conversations || []
+        );
+
+        const conversations =
+            data.conversations || [];
+
+        if (
+            currentChatId &&
+            conversations.some(
+                chat =>
+                    chat.id ===
+                    currentChatId
+            )
+        ) {
+
+            await openConversation(
+                currentChatId
+            );
+
+            return;
+        }
+
+        if (
+            conversations.length > 0
+        ) {
+
+            currentChatId =
+                conversations[0].id;
+
+            await openConversation(
+                currentChatId
+            );
+
+            return;
+        }
+
+        await createNewConversation();
+
+    } catch (error) {
+
+        console.error(error);
+
+        showToast(
+            "Chat history load nahi ho paayi."
+        );
+    }
+}
+
+function renderChatList(
+    conversations
+) {
+
+    const chatList =
+        document.getElementById(
+            "chatList"
+        );
+
+    chatList.innerHTML = "";
+
+    conversations.forEach(
+        conversation => {
+
+            const item =
+                document.createElement(
+                    "div"
+                );
+
+            item.className =
+                "chat-item" +
+                (
+                    conversation.id ===
+                    currentChatId
+                        ? " active"
+                        : ""
+                );
+
+            const title =
+                document.createElement(
+                    "div"
+                );
+
+            title.className =
+                "chat-title";
+
+            title.textContent =
+                conversation.title ||
+                "New Chat";
+
+            title.onclick =
+                () => {
+                    openConversation(
+                        conversation.id
+                    );
+                };
+
+            const actions =
+                document.createElement(
+                    "div"
+                );
+
+            actions.className =
+                "chat-actions";
+
+            const rename =
+                document.createElement(
+                    "button"
+                );
+
+            rename.className =
+                "chat-action";
+
+            rename.textContent =
+                "✏️";
+
+            rename.title =
+                "Rename";
+
+            rename.onclick =
+                event => {
+
+                    event.stopPropagation();
+
+                    renameConversation(
+                        conversation.id,
+                        conversation.title
+                    );
+                };
+
+            const del =
+                document.createElement(
+                    "button"
+                );
+
+            del.className =
+                "chat-action delete";
+
+            del.textContent =
+                "🗑️";
+
+            del.title =
+                "Delete";
+
+            del.onclick =
+                event => {
+
+                    event.stopPropagation();
+
+                    openDeleteConfirmation(
+                        conversation.id
+                    );
+                };
+
+            actions.appendChild(
+                rename
+            );
+
+            actions.appendChild(
+                del
+            );
+
+            item.appendChild(
+                title
+            );
+
+            item.appendChild(
+                actions
+            );
+
+            item.onclick =
+                () => {
+
+                    openConversation(
+                        conversation.id
+                    );
+                };
+
+            chatList.appendChild(
+                item
+            );
+        }
+    );
+}
+
+async function createNewConversation() {
+
+    if (!currentUser) {
+
+        openAuth("login");
+
+        return;
+    }
+
+    try {
+
+        const response =
+            await fetch(
+                "/api/conversations",
+                {
+                    method: "POST"
+                }
+            );
+
+        const data =
+            await response.json();
+
+        if (!response.ok) {
+
+            showToast(
+                data.error ||
+                "New chat create nahi ho paayi."
+            );
+
+            return;
+        }
+
+        currentChatId =
+            data.conversation.id;
+
+        clearMessages();
+
+        await loadConversations();
+
+    } catch (error) {
+
+        console.error(error);
+    }
+}
+
+async function openConversation(
+    chatId
+) {
+
+    currentChatId =
+        Number(chatId);
+
+    clearMessages();
+
+    try {
+
+        const response =
+            await fetch(
+                `/api/chat-history?chatId=${currentChatId}`
+            );
+
+        const data =
+            await response.json();
+
+        if (!response.ok) {
+
+            showToast(
+                data.error ||
+                "Chat load nahi ho paayi."
+            );
+
+            return;
+        }
+
+        const messages =
+            data.messages || [];
+
+        if (
+            messages.length === 0
+        ) {
+
+            showWelcome();
+
+        } else {
+
+            messages.forEach(
+                message => {
+
+                    addMessage(
+                        message.role,
+                        message.content
+                    );
+
+                }
+            );
+
+            scrollToBottom();
+        }
+
+        await refreshChatListOnly();
+
+    } catch (error) {
+
+        console.error(error);
+
+        showToast(
+            "Chat load nahi ho paayi."
+        );
+    }
+}
+
+async function refreshChatListOnly() {
+
+    try {
+
+        const response =
+            await fetch(
+                "/api/conversations"
+            );
+
+        const data =
+            await response.json();
+
+        renderChatList(
+            data.conversations || []
+        );
+
+    } catch {}
+}
+
+/* =========================================================
+   RENAME
+========================================================= */
+
+async function renameConversation(
+    id,
+    oldTitle
+) {
+
+    const title =
+        prompt(
+            "New chat name:",
+            oldTitle || "New Chat"
+        );
+
+    if (
+        !title ||
+        !title.trim()
+    ) {
+        return;
+    }
+
+    try {
+
+        const response =
+            await fetch(
+                `/api/conversations/${id}`,
+                {
+                    method: "PATCH",
+
+                    headers: {
+                        "Content-Type":
+                            "application/json"
+                    },
+
+                    body:
+                        JSON.stringify({
+                            title:
+                                title.trim()
+                        })
+                }
+            );
+
+        const data =
+            await response.json();
+
+        if (!response.ok) {
+
+            showToast(
+                data.error ||
+                "Rename failed."
+            );
+
+            return;
+        }
+
+        await refreshChatListOnly();
+
+        showToast(
+            "Chat renamed ✏️"
+        );
+
+    } catch (error) {
+
+        console.error(error);
+    }
+}
+
+/* =========================================================
+   DELETE
+========================================================= */
+
+function openDeleteConfirmation(
+    chatId
+) {
+
+    chatToDeleteId =
+        Number(chatId);
+
+    document
+        .getElementById(
+            "confirmOverlay"
+        )
+        .classList.add(
+            "show"
+        );
+}
+
+function closeDeleteConfirmation() {
+
+    chatToDeleteId =
+        null;
+
+    document
+        .getElementById(
+            "confirmOverlay"
+        )
+        .classList.remove(
+            "show"
+        );
+}
+
+async function confirmDeleteChat() {
+
+    if (!chatToDeleteId) {
+        return;
+    }
+
+    const deletingId =
+        chatToDeleteId;
+
+    closeDeleteConfirmation();
+
+    try {
+
+        const response =
+            await fetch(
+                `/api/conversations/${deletingId}`,
+                {
+                    method: "DELETE"
+                }
+            );
+
+        const data =
+            await response.json();
+
+        if (!response.ok) {
+
+            showToast(
+                data.error ||
+                "Chat delete nahi ho paayi."
+            );
+
+            return;
+        }
+
+        if (
+            currentChatId ===
+            deletingId
+        ) {
+
+            currentChatId =
+                null;
+        }
+
+        showToast(
+            "Chat delete ho gayi 🗑️"
+        );
+
+        await loadConversations();
+
+    } catch (error) {
+
+        console.error(error);
+
+        showToast(
+            "Chat delete nahi ho paayi."
+        );
+    }
+}
+
+/* =========================================================
+   CHAT UI
+========================================================= */
+
+function clearMessages() {
+
+    messagesEl.innerHTML = "";
+}
+
+function showWelcome() {
+
+    clearMessages();
+
+    messagesEl.innerHTML = `
+
+        <div class="welcome">
+
+            <h1>
+                JAXX AI
+            </h1>
+
+            <p>
+                Your intelligent AI assistant.
+                Ask anything, learn anything,
+                and build anything. 🚀
+            </p>
+
+            <div class="suggestions">
+
+                <button
+                    class="suggestion"
+                    onclick="useSuggestion('Explain something to me')"
+                >
+                    💡 Explain something
+                </button>
+
+                <button
+                    class="suggestion"
+                    onclick="useSuggestion('Help me write some code')"
+                >
+                    💻 Help with code
+                </button>
+
+                <button
+                    class="suggestion"
+                    onclick="useSuggestion('Teach me something interesting')"
+                >
+                    🧠 Teach me
+                </button>
+
+                <button
+                    class="suggestion"
+                    onclick="useSuggestion('Give me a creative idea')"
+                >
+                    ✨ Creative idea
+                </button>
+
+            </div>
+
         </div>
+
     `;
-
-
-    suggestions.style.display = "flex";
-
-
-    document.getElementById("videoPrompt").value = "";
-
-    document.getElementById("videoStatus").textContent = "";
-
-    document.getElementById("videoPanel")
-        .classList.remove("show");
-
-
-    input.value = "";
-
-    removeFile();
-
 }
 
+function useSuggestion(text) {
 
-/* ================= ENTER TO SEND ================= */
+    if (!currentUser) {
 
-input.addEventListener("keydown", function(event) {
+        openAuth("login");
 
-    if (event.key === "Enter" && !event.shiftKey) {
+        return;
+    }
+
+    messageInput.value =
+        text;
+
+    messageInput.focus();
+}
+
+function addMessage(
+    role,
+    content
+) {
+
+    const welcome =
+        document.querySelector(
+            ".welcome"
+        );
+
+    if (welcome) {
+        welcome.remove();
+    }
+
+    const wrapper =
+        document.createElement(
+            "div"
+        );
+
+    wrapper.className =
+        `message ${role}`;
+
+    const bubble =
+        document.createElement(
+            "div"
+        );
+
+    bubble.className =
+        "bubble";
+
+    bubble.innerHTML =
+        formatMessage(content);
+
+    wrapper.appendChild(
+        bubble
+    );
+
+    messagesEl.appendChild(
+        wrapper
+    );
+
+    scrollToBottom();
+}
+
+function formatMessage(
+    text
+) {
+
+    if (!text) {
+        return "";
+    }
+
+    let safe =
+        escapeHtml(text);
+
+    safe =
+        safe.replace(
+            /\*\*(.*?)\*\*/g,
+            "<strong>$1</strong>"
+        );
+
+    safe =
+        safe.replace(
+            /`([^`]+)`/g,
+            "<code>$1</code>"
+        );
+
+    return safe;
+}
+
+function escapeHtml(
+    text
+) {
+
+    return String(text)
+        .replace(
+            /&/g,
+            "&amp;"
+        )
+        .replace(
+            /</g,
+            "&lt;"
+        )
+        .replace(
+            />/g,
+            "&gt;"
+        )
+        .replace(
+            /"/g,
+            "&quot;"
+        )
+        .replace(
+            /'/g,
+            "&#039;"
+        );
+}
+
+function scrollToBottom() {
+
+    setTimeout(
+        () => {
+
+            chatArea.scrollTop =
+                chatArea.scrollHeight;
+
+        },
+        20
+    );
+}
+
+/* =========================================================
+   SEND MESSAGE
+========================================================= */
+
+function handleInputKey(
+    event
+) {
+
+    if (
+        event.key === "Enter" &&
+        !event.shiftKey
+    ) {
 
         event.preventDefault();
 
         sendMessage();
+    }
+}
 
+async function sendMessage() {
+
+    if (!currentUser) {
+
+        openAuth("login");
+
+        return;
     }
 
-});
+    const message =
+        messageInput.value.trim();
 
+    if (
+        !message &&
+        !selectedFile
+    ) {
+        return;
+    }
 
-/* ================= AUTO RESIZE ================= */
+    if (!currentChatId) {
 
-input.addEventListener("input", function() {
+        await createNewConversation();
 
-    this.style.height = "auto";
+        if (!currentChatId) {
+            return;
+        }
+    }
 
-    this.style.height =
-        Math.min(this.scrollHeight, 150) + "px";
+    if (selectedFile) {
 
-});
+        await sendFileMessage(
+            message
+        );
 
+        return;
+    }
 
-/* ================= START ================= */
+    messageInput.value = "";
 
-loadChat();
+    autoResizeTextarea();
+
+    addMessage(
+        "user",
+        message
+    );
+
+    showTyping();
+
+    sendButton.disabled =
+        true;
+
+    try {
+
+        const response =
+            await fetch(
+                "/api/chat",
+                {
+                    method: "POST",
+
+                    headers: {
+                        "Content-Type":
+                            "application/json"
+                    },
+
+                    body:
+                        JSON.stringify({
+
+                            chatId:
+                                currentChatId,
+
+                            messages: [
+
+                                {
+                                    role:
+                                        "user",
+
+                                    content:
+                                        message
+                                }
+
+                            ]
+
+                        })
+                }
+            );
+
+        const data =
+            await response.json();
+
+        removeTyping();
+
+        if (!response.ok) {
+
+            addMessage(
+                "assistant",
+                data.error ||
+                "Something went wrong."
+            );
+
+            return;
+        }
+
+        addMessage(
+            "assistant",
+            data.reply ||
+            "No response."
+        );
+
+        await refreshChatListOnly();
+
+    } catch (error) {
+
+        console.error(error);
+
+        removeTyping();
+
+        addMessage(
+            "assistant",
+            "Server se connection nahi ho paaya."
+        );
+
+    } finally {
+
+        sendButton.disabled =
+            false;
+    }
+}
+
+/* =========================================================
+   TYPING
+========================================================= */
+
+function showTyping() {
+
+    removeTyping();
+
+    const wrapper =
+        document.createElement(
+            "div"
+        );
+
+    wrapper.id =
+        "typingMessage";
+
+    wrapper.className =
+        "message assistant";
+
+    wrapper.innerHTML = `
+
+        <div class="bubble">
+
+            <div class="typing">
+
+                <span></span>
+                <span></span>
+                <span></span>
+
+            </div>
+
+        </div>
+
+    `;
+
+    messagesEl.appendChild(
+        wrapper
+    );
+
+    scrollToBottom();
+}
+
+function removeTyping() {
+
+    const typing =
+        document.getElementById(
+            "typingMessage"
+        );
+
+    if (typing) {
+        typing.remove();
+    }
+}
+
+/* =========================================================
+   FILE UPLOAD
+========================================================= */
+
+function handleFileButton() {
+
+    if (!currentUser) {
+
+        openAuth("login");
+
+        return;
+    }
+
+    if (
+        currentUser.plan === "free"
+    ) {
+
+        openPremiumModal();
+
+        showToast(
+            "File & image analysis Pro feature hai 💎"
+        );
+
+        return;
+    }
+
+    fileInput.click();
+}
+
+function handleFileSelected() {
+
+    const file =
+        fileInput.files[0];
+
+    if (!file) {
+
+        selectedFile =
+            null;
+
+        fileNameEl.textContent =
+            "";
+
+        return;
+    }
+
+    selectedFile =
+        file;
+
+    fileNameEl.textContent =
+        `📎 ${file.name}`;
+
+    messageInput.focus();
+}
+
+async function sendFileMessage(
+    message
+) {
+
+    if (!selectedFile) {
+        return;
+    }
+
+    showTyping();
+
+    sendButton.disabled =
+        true;
+
+    const formData =
+        new FormData();
+
+    formData.append(
+        "file",
+        selectedFile
+    );
+
+    formData.append(
+        "message",
+        message ||
+        "Is file ko analyze karo aur clearly explain karo."
+    );
+
+    formData.append(
+        "chatId",
+        currentChatId
+    );
+
+    try {
+
+        const response =
+            await fetch(
+                "/api/upload",
+                {
+                    method: "POST",
+                    body: formData
+                }
+            );
+
+        const data =
+            await response.json();
+
+        removeTyping();
+
+        if (!response.ok) {
+
+            if (
+                data.code ===
+                "PREMIUM_REQUIRED"
+            ) {
+
+                openPremiumModal();
+
+            }
+
+            addMessage(
+                "assistant",
+                data.error ||
+                "File analyze nahi ho paayi."
+            );
+
+            return;
+        }
+
+        addMessage(
+            "user",
+            message ||
+            `📎 ${selectedFile.name}`
+        );
+
+        addMessage(
+            "assistant",
+            data.reply ||
+            "File analyze ho gayi."
+        );
+
+        selectedFile =
+            null;
+
+        fileInput.value =
+            "";
+
+        fileNameEl.textContent =
+            "";
+
+        messageInput.value =
+            "";
+
+        await refreshChatListOnly();
+
+    } catch (error) {
+
+        console.error(error);
+
+        removeTyping();
+
+        addMessage(
+            "assistant",
+            "File upload nahi ho paayi."
+        );
+
+    } finally {
+
+        sendButton.disabled =
+            false;
+    }
+}
+
+/* =========================================================
+   VIDEO
+========================================================= */
+
+function openVideoPanel() {
+
+    if (!currentUser) {
+
+        openAuth("login");
+
+        return;
+    }
+
+    if (
+        currentUser.plan === "free"
+    ) {
+
+        openPremiumModal();
+
+        showToast(
+            "AI Video Generation Pro feature hai 💎"
+        );
+
+        return;
+    }
+
+    document
+        .getElementById(
+            "videoPanel"
+        )
+        .classList.add(
+            "show"
+        );
+}
+
+function closeVideoPanel() {
+
+    document
+        .getElementById(
+            "videoPanel"
+        )
+        .classList.remove(
+            "show"
+        );
+}
+
+async function generateVideo() {
+
+    const prompt =
+        document
+            .getElementById(
+                "videoPrompt"
+            )
+            .value
+            .trim();
+
+    const duration =
+        document
+            .getElementById(
+                "videoDuration"
+            )
+            .value;
+
+    const ratio =
+        document
+            .getElementById(
+                "videoRatio"
+            )
+            .value;
+
+    const result =
+        document.getElementById(
+            "videoResult"
+        );
+
+    if (!prompt) {
+
+        showToast(
+            "Video prompt enter karo."
+        );
+
+        return;
+    }
+
+    result.innerHTML = `
+
+        <p style="
+            color:#94a3c4;
+            font-size:12px;
+        ">
+            🎬 Generating video...
+            Please wait.
+        </p>
+
+    `;
+
+    try {
+
+        const response =
+            await fetch(
+                "/api/generate-video",
+                {
+                    method: "POST",
+
+                    headers: {
+                        "Content-Type":
+                            "application/json"
+                    },
+
+                    body:
+                        JSON.stringify({
+
+                            chatId:
+                                currentChatId,
+
+                            prompt:
+                                prompt,
+
+                            duration:
+                                duration,
+
+                            ratio:
+                                ratio
+
+                        })
+                }
+            );
+
+        const data =
+            await response.json();
+
+        if (!response.ok) {
+
+            if (
+                data.code ===
+                "PREMIUM_REQUIRED"
+            ) {
+
+                closeVideoPanel();
+
+                openPremiumModal();
+
+                return;
+            }
+
+            result.innerHTML = `
+
+                <p style="
+                    color:#ff7893;
+                    font-size:12px;
+                ">
+                    ❌
+                    ${escapeHtml(
+                        data.error ||
+                        "Video generation failed."
+                    )}
+                </p>
+
+            `;
+
+            return;
+        }
+
+        result.innerHTML = `
+
+            <video
+                controls
+                autoplay
+                muted
+                playsinline
+            >
+                <source
+                    src="${data.videoUrl}"
+                    type="video/mp4"
+                >
+            </video>
+
+            <p style="
+                color:#94a3c4;
+                font-size:11px;
+                margin-top:8px;
+            ">
+                Video generated successfully 🎬
+            </p>
+
+        `;
+
+    } catch (error) {
+
+        console.error(error);
+
+        result.innerHTML = `
+
+            <p style="
+                color:#ff7893;
+                font-size:12px;
+            ">
+                ❌ Server connection failed.
+            </p>
+
+        `;
+    }
+}
+
+/* =========================================================
+   PREMIUM
+========================================================= */
+
+function openPremiumModal() {
+
+    document
+        .getElementById(
+            "accountMenu"
+        )
+        .classList.remove(
+            "show"
+        );
+
+    document
+        .getElementById(
+            "premiumModal"
+        )
+        .classList.add(
+            "show"
+        );
+
+    updatePremiumButtons();
+}
+
+function closePremiumModal() {
+
+    document
+        .getElementById(
+            "premiumModal"
+        )
+        .classList.remove(
+            "show"
+        );
+}
+
+function updatePremiumButtons() {
+
+    const freeButton =
+        document.getElementById(
+            "freePlanButton"
+        );
+
+    if (!currentUser) {
+
+        freeButton.textContent =
+            "Free Plan";
+
+        return;
+    }
+
+    if (
+        currentUser.plan ===
+        "free"
+    ) {
+
+        freeButton.textContent =
+            "Current Plan";
+
+    } else {
+
+        freeButton.textContent =
+            "Free";
+    }
+}
+
+function upgradePlan(
+    plan
+) {
+
+    if (!currentUser) {
+
+        closePremiumModal();
+
+        openAuth("login");
+
+        return;
+    }
+
+    if (
+        currentUser.plan ===
+        plan
+    ) {
+
+        showToast(
+            "Ye tumhara current plan hai."
+        );
+
+        return;
+    }
+
+    /*
+        PAYMENT ABHI CONNECT NAHI HAI.
+
+        Next step me Stripe Checkout
+        connect kiya jayega.
+
+        Real billing ko adult/business
+        account owner handle karega.
+    */
+
+    showToast(
+        "💎 Premium checkout abhi setup nahi hua. Stripe next step me connect karenge."
+    );
+}
+
+/* =========================================================
+   TEXTAREA
+========================================================= */
+
+messageInput.addEventListener(
+    "input",
+    autoResizeTextarea
+);
+
+function autoResizeTextarea() {
+
+    messageInput.style.height =
+        "auto";
+
+    messageInput.style.height =
+        Math.min(
+            messageInput.scrollHeight,
+            130
+        ) + "px";
+}
 
 </script>
 
