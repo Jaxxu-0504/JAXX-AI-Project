@@ -94,6 +94,7 @@ async function initDatabase() {
     `);
 
     // Existing databases migration
+
     await pool.query(`
         ALTER TABLE users
         ADD COLUMN IF NOT EXISTS stripe_customer_id TEXT
@@ -448,7 +449,6 @@ app.use(
         path.join(__dirname, "public")
     )
 );
-
 // ===============================
 // AUTH
 // ===============================
@@ -507,6 +507,7 @@ function requireAuth(req, res, next) {
     next();
 }
 
+
 // ===============================
 // FRESH USER
 // ===============================
@@ -532,6 +533,7 @@ async function getFreshUser(userId) {
 
     return result.rows[0];
 }
+
 
 // ===============================
 // PREMIUM PLAN CHECK
@@ -595,6 +597,7 @@ function requirePlan(requiredPlans) {
     };
 }
 
+
 // ===============================
 // PLANS API
 // ===============================
@@ -609,6 +612,7 @@ app.get(
         });
     }
 );
+
 
 // ===============================
 // CREATE STRIPE CHECKOUT
@@ -671,6 +675,7 @@ app.post(
             }
 
             // Already on same plan
+
             if (user.plan === plan) {
 
                 return res.status(400).json({
@@ -678,6 +683,7 @@ app.post(
                         `Aap already ${PLANS[plan].name} plan par ho.`
                 });
             }
+
 
             // ===============================
             // CREATE / REUSE STRIPE CUSTOMER
@@ -716,6 +722,7 @@ app.post(
                     user.id
                 ]);
             }
+
 
             // ===============================
             // CHECKOUT SESSION
@@ -784,7 +791,6 @@ app.post(
 
                 url:
                     session.url
-
             });
 
         } catch (error) {
@@ -803,6 +809,7 @@ app.post(
         }
     }
 );
+
 
 // ===============================
 // CREATE STRIPE CUSTOMER PORTAL
@@ -864,7 +871,6 @@ app.post(
 
                 url:
                     portalSession.url
-
             });
 
         } catch (error) {
@@ -883,6 +889,7 @@ app.post(
         }
     }
 );
+
 
 // ===============================
 // SIGNUP
@@ -910,6 +917,7 @@ app.post(
                 typeof req.body.password === "string"
                     ? req.body.password
                     : "";
+
 
             if (!name) {
 
@@ -946,6 +954,7 @@ app.post(
                 });
             }
 
+
             const existingUser =
                 await pool.query(`
                     SELECT id
@@ -963,11 +972,13 @@ app.post(
                 });
             }
 
+
             const passwordHash =
                 await bcrypt.hash(
                     password,
                     12
                 );
+
 
             const result =
                 await pool.query(`
@@ -995,21 +1006,27 @@ app.post(
                     passwordHash
                 ]);
 
+
             const user =
                 result.rows[0];
 
             const token =
                 createToken(user);
 
+
             res.cookie(
                 "jaxx_token",
                 token,
                 {
+
                     httpOnly: true,
+
                     secure:
                         process.env.NODE_ENV ===
                         "production",
+
                     sameSite: "lax",
+
                     maxAge:
                         7 *
                         24 *
@@ -1019,15 +1036,24 @@ app.post(
                 }
             );
 
+
             return res.status(201).json({
 
                 success: true,
 
                 user: {
-                    id: user.id,
-                    name: user.name,
-                    email: user.email,
-                    plan: user.plan
+
+                    id:
+                        user.id,
+
+                    name:
+                        user.name,
+
+                    email:
+                        user.email,
+
+                    plan:
+                        user.plan
                 }
             });
 
@@ -1045,6 +1071,7 @@ app.post(
         }
     }
 );
+
 
 // ===============================
 // LOGIN
@@ -1068,6 +1095,7 @@ app.post(
                     ? req.body.password
                     : "";
 
+
             if (
                 !email ||
                 !password
@@ -1078,6 +1106,7 @@ app.post(
                         "Email aur password required hai."
                 });
             }
+
 
             const result =
                 await pool.query(`
@@ -1091,6 +1120,7 @@ app.post(
                     WHERE email = $1
                 `, [email]);
 
+
             if (
                 result.rows.length === 0
             ) {
@@ -1101,14 +1131,17 @@ app.post(
                 });
             }
 
+
             const user =
                 result.rows[0];
+
 
             const passwordMatch =
                 await bcrypt.compare(
                     password,
                     user.password_hash
                 );
+
 
             if (!passwordMatch) {
 
@@ -1118,18 +1151,24 @@ app.post(
                 });
             }
 
+
             const token =
                 createToken(user);
+
 
             res.cookie(
                 "jaxx_token",
                 token,
                 {
+
                     httpOnly: true,
+
                     secure:
                         process.env.NODE_ENV ===
                         "production",
+
                     sameSite: "lax",
+
                     maxAge:
                         7 *
                         24 *
@@ -1139,15 +1178,24 @@ app.post(
                 }
             );
 
+
             return res.json({
 
                 success: true,
 
                 user: {
-                    id: user.id,
-                    name: user.name,
-                    email: user.email,
-                    plan: user.plan
+
+                    id:
+                        user.id,
+
+                    name:
+                        user.name,
+
+                    email:
+                        user.email,
+
+                    plan:
+                        user.plan
                 }
             });
 
@@ -1166,6 +1214,7 @@ app.post(
     }
 );
 
+
 // ===============================
 // CURRENT USER
 // ===============================
@@ -1179,6 +1228,7 @@ app.get(
             const tokenUser =
                 getUserFromToken(req);
 
+
             if (!tokenUser) {
 
                 return res.json({
@@ -1186,10 +1236,12 @@ app.get(
                 });
             }
 
+
             const user =
                 await getFreshUser(
                     tokenUser.id
                 );
+
 
             if (!user) {
 
@@ -1198,15 +1250,25 @@ app.get(
                 });
             }
 
+
             return res.json({
 
                 loggedIn: true,
 
                 user: {
-                    id: user.id,
-                    name: user.name,
-                    email: user.email,
-                    plan: user.plan,
+
+                    id:
+                        user.id,
+
+                    name:
+                        user.name,
+
+                    email:
+                        user.email,
+
+                    plan:
+                        user.plan,
+
                     createdAt:
                         user.created_at
                 }
@@ -1226,6 +1288,7 @@ app.get(
         }
     }
 );
+
 
 // ===============================
 // LOGOUT
@@ -1251,7 +1314,6 @@ app.post(
         });
     }
 );
-
 // ===============================
 // CONVERSATIONS
 // ===============================
@@ -1314,6 +1376,7 @@ app.get(
         }
     }
 );
+
 
 // ===============================
 // CREATE CONVERSATION
@@ -1385,6 +1448,7 @@ app.post(
         }
     }
 );
+
 
 // ===============================
 // CHAT HISTORY
@@ -1487,6 +1551,7 @@ app.get(
     }
 );
 
+
 // ===============================
 // DELETE CONVERSATION
 // ===============================
@@ -1550,6 +1615,7 @@ app.delete(
         }
     }
 );
+
 
 // ===============================
 // RENAME CONVERSATION
@@ -1636,6 +1702,7 @@ app.patch(
         }
     }
 );
+
 
 // ===============================
 // MANUAL SAVE MESSAGE
@@ -1785,6 +1852,7 @@ app.post(
     }
 );
 
+
 // ===============================
 // NORMAL AI CHAT
 // ===============================
@@ -1875,7 +1943,6 @@ app.post(
                     input:
                         messages.map(
                             msg => ({
-
                                 role:
                                     msg.role,
 
@@ -1885,9 +1952,11 @@ app.post(
                         )
                 });
 
-            const reply =
-                response.output_text;
+            const assistantReply =
+                response.output_text ||
+                "Sorry, mujhe response generate karne me problem hui.";
 
+            // Save user message
             const lastUserMessage =
                 [...messages]
                     .reverse()
@@ -1896,12 +1965,7 @@ app.post(
                             msg.role === "user"
                     );
 
-            if (
-                lastUserMessage &&
-                typeof lastUserMessage.content ===
-                    "string" &&
-                lastUserMessage.content.trim()
-            ) {
+            if (lastUserMessage) {
 
                 await pool.query(`
                     INSERT INTO chat_messages
@@ -1922,373 +1986,11 @@ app.post(
                     req.user.id,
                     conversationId,
                     "user",
-                    lastUserMessage.content.trim()
-                ]);
-
-                const currentTitle =
-                    conversation.rows[0].title;
-
-                if (
-                    currentTitle ===
-                    "New Chat"
-                ) {
-
-                    let title =
-                        lastUserMessage.content
-                            .trim()
-                            .replace(
-                                /\s+/g,
-                                " "
-                            );
-
-                    if (
-                        title.length > 40
-                    ) {
-
-                        title =
-                            title.slice(
-                                0,
-                                40
-                            ) + "...";
-                    }
-
-                    if (title) {
-
-                        await pool.query(`
-                            UPDATE chat_conversations
-                            SET
-                                title = $1,
-                                updated_at =
-                                    CURRENT_TIMESTAMP
-                            WHERE id = $2
-                            AND user_id = $3
-                        `, [
-                            title,
-                            conversationId,
-                            req.user.id
-                        ]);
-                    }
-                }
-            }
-
-            if (
-                typeof reply === "string" &&
-                reply.trim()
-            ) {
-
-                await pool.query(`
-                    INSERT INTO chat_messages
-                        (
-                            user_id,
-                            conversation_id,
-                            role,
-                            content
-                        )
-                    VALUES
-                        (
-                            $1,
-                            $2,
-                            $3,
-                            $4
-                        )
-                `, [
-                    req.user.id,
-                    conversationId,
-                    "assistant",
-                    reply.trim()
+                    lastUserMessage.content
                 ]);
             }
 
-            await pool.query(`
-                UPDATE chat_conversations
-                SET
-                    updated_at =
-                        CURRENT_TIMESTAMP
-                WHERE id = $1
-                AND user_id = $2
-            `, [
-                conversationId,
-                req.user.id
-            ]);
-
-            return res.json({
-                reply: reply
-            });
-
-        } catch (error) {
-
-            console.error(
-                "CHAT ERROR:",
-                error
-            );
-
-            return res.status(500).json({
-                error:
-                    "AI response nahi aa paaya. Server ya API configuration check karo."
-            });
-        }
-    }
-);
-
-// ===============================
-// UPLOAD CONFIG
-// ===============================
-
-const uploadDir =
-    path.join(
-        __dirname,
-        "uploads"
-    );
-
-if (!fs.existsSync(uploadDir)) {
-
-    fs.mkdirSync(
-        uploadDir,
-        {
-            recursive: true
-        }
-    );
-}
-
-const upload =
-    multer({
-
-        dest:
-            uploadDir,
-
-        limits: {
-
-            fileSize:
-                20 * 1024 * 1024
-        }
-    });
-
-// ===============================
-// FILE / IMAGE UPLOAD
-// PREMIUM ONLY
-// ===============================
-
-app.post(
-    "/api/upload",
-    requireAuth,
-    requirePlan([
-        "pro",
-        "pro_plus"
-    ]),
-    upload.single("file"),
-    async (req, res) => {
-
-        try {
-
-            if (!req.file) {
-
-                return res.status(400).json({
-                    error:
-                        "File select nahi ki gayi."
-                });
-            }
-
-            const conversationId =
-                Number(
-                    req.body.chatId
-                );
-
-            if (!conversationId) {
-
-                return res.status(400).json({
-                    error:
-                        "Chat ID required hai."
-                });
-            }
-
-            const conversation =
-                await pool.query(`
-                    SELECT id
-                    FROM chat_conversations
-                    WHERE id = $1
-                    AND user_id = $2
-                `, [
-                    conversationId,
-                    req.user.id
-                ]);
-
-            if (
-                conversation.rows.length === 0
-            ) {
-
-                return res.status(404).json({
-                    error:
-                        "Chat nahi mili."
-                });
-            }
-
-            const userMessage =
-                typeof req.body.message === "string" &&
-                req.body.message.trim()
-                    ? req.body.message.trim()
-                    : "Is file ko analyze karo aur mujhe clearly explain karo.";
-
-            const extension =
-                path.extname(
-                    req.file.originalname
-                ).toLowerCase();
-
-            const imageExtensions = [
-                ".jpg",
-                ".jpeg",
-                ".png",
-                ".gif",
-                ".webp"
-            ];
-
-            const isImage =
-                imageExtensions.includes(
-                    extension
-                );
-
-            const fileBuffer =
-                fs.readFileSync(
-                    req.file.path
-                );
-
-            const openAIFile =
-                await toFile(
-                    fileBuffer,
-                    req.file.originalname,
-                    {
-                        type:
-                            req.file.mimetype
-                    }
-                );
-
-            const uploadedFile =
-                await client.files.create({
-
-                    file:
-                        openAIFile,
-
-                    purpose:
-                        isImage
-                            ? "vision"
-                            : "user_data"
-                });
-
-            let reply = "";
-
-            if (isImage) {
-
-                const response =
-                    await client.responses.create({
-
-                        model:
-                            "gpt-5.6-luna",
-
-                        instructions:
-                            "You are JAXX AI. Analyze the uploaded image carefully. " +
-                            "Describe and explain what is visible in the image accurately. " +
-                            "Answer naturally in Hindi, Hinglish, or English depending on the user's language.",
-
-                        input: [
-
-                            {
-                                role:
-                                    "user",
-
-                                content: [
-
-                                    {
-                                        type:
-                                            "input_text",
-
-                                        text:
-                                            userMessage
-                                    },
-
-                                    {
-                                        type:
-                                            "input_image",
-
-                                        file_id:
-                                            uploadedFile.id
-                                    }
-                                ]
-                            }
-                        ]
-                    });
-
-                reply =
-                    response.output_text;
-
-            } else {
-
-                const response =
-                    await client.responses.create({
-
-                        model:
-                            "gpt-5.6-luna",
-
-                        instructions:
-                            "You are JAXX AI. Analyze the uploaded file carefully. " +
-                            "Extract and understand the useful information from it. " +
-                            "Answer clearly and naturally in Hindi, Hinglish, or English " +
-                            "depending on the user's language.",
-
-                        input: [
-
-                            {
-                                role:
-                                    "user",
-
-                                content: [
-
-                                    {
-                                        type:
-                                            "input_text",
-
-                                        text:
-                                            userMessage
-                                    },
-
-                                    {
-                                        type:
-                                            "input_file",
-
-                                        file_id:
-                                            uploadedFile.id
-                                    }
-                                ]
-                            }
-                        ]
-                    });
-
-                reply =
-                    response.output_text;
-            }
-
-            await pool.query(`
-                INSERT INTO chat_messages
-                    (
-                        user_id,
-                        conversation_id,
-                        role,
-                        content
-                    )
-                VALUES
-                    (
-                        $1,
-                        $2,
-                        $3,
-                        $4
-                    )
-            `, [
-                req.user.id,
-                conversationId,
-                "user",
-                userMessage
-            ]);
-
-            const historyReply =
-                `[File: ${req.file.originalname}]\n\n${reply}`;
+            // Save assistant message
 
             await pool.query(`
                 INSERT INTO chat_messages
@@ -2309,8 +2011,10 @@ app.post(
                 req.user.id,
                 conversationId,
                 "assistant",
-                historyReply
+                assistantReply
             ]);
+
+            // Update conversation time
 
             await pool.query(`
                 UPDATE chat_conversations
@@ -2318,59 +2022,35 @@ app.post(
                     updated_at =
                         CURRENT_TIMESTAMP
                 WHERE id = $1
-                AND user_id = $2
-            `, [
-                conversationId,
-                req.user.id
-            ]);
+            `, [conversationId]);
 
             return res.json({
 
                 success: true,
 
                 reply:
-                    reply,
+                    assistantReply,
 
-                filename:
-                    req.file.originalname
+                conversationId:
+                    conversationId
             });
 
         } catch (error) {
 
             console.error(
-                "UPLOAD ERROR:"
-            );
-
-            console.dir(
-                error,
-                {
-                    depth: null
-                }
+                "CHAT ERROR:",
+                error
             );
 
             return res.status(500).json({
 
                 error:
                     error?.message ||
-                    "File analyze nahi ho paayi."
+                    "AI response generate nahi ho paaya."
             });
-
-        } finally {
-
-            if (req.file) {
-
-                try {
-
-                    fs.unlinkSync(
-                        req.file.path
-                    );
-
-                } catch {}
-            }
         }
     }
 );
-
 // ===============================
 // VIDEO GENERATION
 // PREMIUM ONLY
@@ -2471,11 +2151,15 @@ app.post(
                 "--------------------------------"
             );
 
+
+            // ===============================
+            // CREATE RUNWAY TASK
+            // ===============================
+
             const createResponse =
                 await fetch(
                     "https://api.dev.runwayml.com/v1/image_to_video",
                     {
-
                         method: "POST",
 
                         headers: {
@@ -2511,8 +2195,10 @@ app.post(
                     }
                 );
 
+
             const createData =
                 await createResponse.json();
+
 
             console.log(
                 "RUNWAY CREATE STATUS:",
@@ -2525,6 +2211,7 @@ app.post(
                     depth: null
                 }
             );
+
 
             if (
                 !createResponse.ok
@@ -2544,8 +2231,10 @@ app.post(
                 });
             }
 
+
             const taskId =
                 createData.id;
+
 
             if (!taskId) {
 
@@ -2559,8 +2248,14 @@ app.post(
                 });
             }
 
+
+            // ===============================
+            // POLL RUNWAY TASK
+            // ===============================
+
             let completedTask =
                 null;
+
 
             for (
                 let attempt = 0;
@@ -2576,12 +2271,14 @@ app.post(
                         )
                 );
 
+
                 const taskResponse =
                     await fetch(
                         `https://api.dev.runwayml.com/v1/tasks/${taskId}`,
                         {
 
-                            method: "GET",
+                            method:
+                                "GET",
 
                             headers: {
 
@@ -2594,13 +2291,16 @@ app.post(
                         }
                     );
 
+
                 const taskData =
                     await taskResponse.json();
+
 
                 console.log(
                     `🎬 RUNWAY STATUS ${attempt + 1}:`,
                     taskData.status
                 );
+
 
                 if (
                     !taskResponse.ok
@@ -2619,6 +2319,7 @@ app.post(
                     });
                 }
 
+
                 if (
                     taskData.status ===
                     "SUCCEEDED"
@@ -2629,6 +2330,7 @@ app.post(
 
                     break;
                 }
+
 
                 if (
                     taskData.status ===
@@ -2648,6 +2350,11 @@ app.post(
                 }
             }
 
+
+            // ===============================
+            // TIMEOUT
+            // ===============================
+
             if (!completedTask) {
 
                 return res.status(504).json({
@@ -2657,8 +2364,14 @@ app.post(
                 });
             }
 
+
+            // ===============================
+            // VIDEO URL
+            // ===============================
+
             const videoUrl =
                 completedTask.output?.[0];
+
 
             if (!videoUrl) {
 
@@ -2671,6 +2384,11 @@ app.post(
                         completedTask
                 });
             }
+
+
+            // ===============================
+            // SUCCESS
+            // ===============================
 
             return res.json({
 
@@ -2686,6 +2404,7 @@ app.post(
                     ratio
             });
 
+
         } catch (error) {
 
             console.error(
@@ -2699,6 +2418,7 @@ app.post(
                 }
             );
 
+
             return res.status(500).json({
 
                 error:
@@ -2708,6 +2428,7 @@ app.post(
         }
     }
 );
+
 
 // ===============================
 // START SERVER
@@ -2719,6 +2440,7 @@ async function startServer() {
 
         await initDatabase();
 
+
         app.listen(
             PORT,
             "0.0.0.0",
@@ -2727,6 +2449,7 @@ async function startServer() {
                 console.log(
                     `🚀 JAXX AI running on port ${PORT}`
                 );
+
 
                 if (stripe) {
 
@@ -2742,6 +2465,7 @@ async function startServer() {
                 }
             }
         );
+
 
     } catch (error) {
 
@@ -2759,5 +2483,6 @@ async function startServer() {
         process.exit(1);
     }
 }
+
 
 startServer();
