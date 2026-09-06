@@ -7,8 +7,17 @@
     "start": "node server.js"
   },
   "dependencies": {
+    "@runwayml/sdk": "^4.20.0",
+    "bcrypt": "^6.0.0",
+    "cookie-parser": "^1.4.7",
     "dotenv": "^16.4.7",
     "express": "^5.1.0",
-    "openai": "^5.12.0"
+    "jsonwebtoken": "^9.0.3",
+    "multer": "^2.3.0",
+    "openai": "^5.12.0",
+    "pg": "^8.23.0"
+  },
+  "allowScripts": {
+    "bcrypt@6.0.0": true
   }
 }

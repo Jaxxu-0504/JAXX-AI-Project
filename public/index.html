@@ -1,1435 +1,1058 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-
-    <meta charset="UTF-8">
-
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    >
-
-    <title>JAXX AI</title>
-
-
-    <style>
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: Inter, Arial, sans-serif;
-        }
-
-
-        /* =========================
-           MAIN BACKGROUND
-        ========================= */
-
-        html,
-        body {
-            width: 100%;
-            height: 100%;
-        }
-
-
-        body {
-
-            color: white;
-
-            height: 100vh;
-
-            overflow: hidden;
-
-            background-color: #020814;
-
-            background-image:
-                linear-gradient(
-                    90deg,
-                    rgba(2, 8, 20, 0.10),
-                    rgba(2, 8, 20, 0.30)
-                ),
-                url("./background.png");
-
-            background-position: center center;
-
-            background-size: cover;
-
-            background-repeat: no-repeat;
-
-            background-attachment: fixed;
-        }
-
-
-        .app {
-
-            display: flex;
-
-            height: 100vh;
-
-            width: 100%;
-        }
-
-
-        /* =========================
-           SIDEBAR
-        ========================= */
-
-        .sidebar {
-
-            width: 270px;
-
-            background:
-                rgba(2, 8, 20, 0.18);
-
-            border-right:
-                1px solid
-                rgba(100, 180, 255, 0.16);
-
-            padding: 22px;
-
-            display: flex;
-
-            flex-direction: column;
-
-            backdrop-filter:
-                blur(8px)
-                saturate(120%);
-
-            -webkit-backdrop-filter:
-                blur(8px)
-                saturate(120%);
-
-            box-shadow:
-                10px 0 40px
-                rgba(0, 0, 0, 0.15);
-        }
-
-
-        .logo {
-
-            font-size: 26px;
-
-            font-weight: 800;
-
-            letter-spacing: 2px;
-
-            margin-bottom: 35px;
-        }
-
-
-        .logo span {
-            color: #3e9cff;
-        }
-
-
-        .new-chat {
-
-            border:
-                1px solid
-                rgba(70, 160, 255, 0.35);
-
-            background:
-                rgba(20, 105, 255, 0.40);
-
-            color: white;
-
-            padding: 14px;
-
-            border-radius: 13px;
-
-            cursor: pointer;
-
-            font-size: 15px;
-
-            font-weight: 700;
-
-            transition: 0.2s;
-
-            backdrop-filter: blur(6px);
-
-            -webkit-backdrop-filter: blur(6px);
-        }
-
-
-        .new-chat:hover {
-
-            transform:
-                translateY(-2px);
-
-            box-shadow:
-                0 0 25px
-                rgba(0, 140, 255, 0.35);
-        }
-
-
-        .menu-title {
-
-            margin-top: 30px;
-
-            margin-bottom: 12px;
-
-            color: #8da2c8;
-
-            font-size: 12px;
-
-            text-transform: uppercase;
-
-            letter-spacing: 1px;
-        }
-
-
-        .history {
-
-            color: #c4d2ec;
-
-            font-size: 14px;
-
-            line-height: 2.6;
-        }
-
-
-        .history div {
-
-            padding: 4px 8px;
-
-            border-radius: 8px;
-
-            cursor: pointer;
-        }
-
-
-        .history div:hover {
-
-            background:
-                rgba(50, 140, 255, 0.12);
-        }
-
-
-        .bottom {
-
-            margin-top: auto;
-
-            color: #8291af;
-
-            font-size: 12px;
-
-            text-align: center;
-        }
-
-
-        /* =========================
-           MAIN
-        ========================= */
-
-        .main {
-
-            flex: 1;
-
-            display: flex;
-
-            flex-direction: column;
-
-            min-width: 0;
-
-            background: transparent;
-        }
-
-
-        /* =========================
-           TOPBAR
-        ========================= */
-
-        .topbar {
-
-            height: 70px;
-
-            border-bottom:
-                1px solid
-                rgba(100, 180, 255, 0.14);
-
-            display: flex;
-
-            align-items: center;
-
-            justify-content: space-between;
-
-            padding: 0 28px;
-
-            background:
-                rgba(2, 8, 20, 0.12);
-
-            backdrop-filter:
-                blur(7px)
-                saturate(120%);
-
-            -webkit-backdrop-filter:
-                blur(7px)
-                saturate(120%);
-        }
-
-
-        .status {
-
-            display: flex;
-
-            align-items: center;
-
-            gap: 9px;
-
-            color: #c5d5ef;
-
-            font-size: 14px;
-        }
-
-
-        .dot {
-
-            width: 9px;
-
-            height: 9px;
-
-            background: #39e58c;
-
-            border-radius: 50%;
-
-            box-shadow:
-                0 0 15px #39e58c;
-        }
-
-
-        .model {
-
-            color: #a4b6d7;
-
-            font-size: 13px;
-        }
-
-
-        /* =========================
-           CHAT
-        ========================= */
-
-        .chat {
-
-            flex: 1;
-
-            overflow-y: auto;
-
-            padding: 40px 10%;
-
-            scroll-behavior: smooth;
-
-            background: transparent;
-        }
-
-
-        .welcome {
-
-            max-width: 850px;
-
-            margin:
-                7vh auto 0;
-
-            text-align: center;
-        }
-
-
-        .ai-icon {
-
-            width: 75px;
-
-            height: 75px;
-
-            margin: auto;
-
-            border-radius: 24px;
-
-            display: flex;
-
-            align-items: center;
-
-            justify-content: center;
-
-            font-size: 35px;
-
-            background:
-                rgba(10, 90, 220, 0.35);
-
-            border:
-                1px solid
-                rgba(90, 180, 255, 0.45);
-
-            box-shadow:
-                0 0 40px
-                rgba(0, 120, 255, 0.30);
-
-            backdrop-filter: blur(8px);
-
-            -webkit-backdrop-filter: blur(8px);
-        }
-
-
-        .welcome h1 {
-
-            margin-top: 25px;
-
-            font-size: 42px;
-        }
-
-
-        .welcome h1 span {
-
-            color: #4da5ff;
-        }
-
-
-        .welcome p {
-
-            color: #b2c1da;
-
-            margin-top: 12px;
-
-            font-size: 16px;
-        }
-
-
-        /* =========================
-           SUGGESTIONS
-        ========================= */
-
-        .suggestions {
-
-            display: grid;
-
-            grid-template-columns:
-                repeat(2, 1fr);
-
-            gap: 14px;
-
-            margin-top: 35px;
-        }
-
-
-        .suggestion {
-
-            padding: 18px;
-
-            border:
-                1px solid
-                rgba(90, 170, 255, 0.18);
-
-            border-radius: 15px;
-
-            background:
-                rgba(3, 15, 35, 0.18);
-
-            color: #d2def1;
-
-            cursor: pointer;
-
-            text-align: left;
-
-            transition: 0.2s;
-
-            backdrop-filter: blur(6px);
-
-            -webkit-backdrop-filter: blur(6px);
-        }
-
-
-        .suggestion:hover {
-
-            border-color:
-                rgba(60, 160, 255, 0.65);
-
-            transform:
-                translateY(-2px);
-
-            background:
-                rgba(10, 45, 90, 0.28);
-
-            box-shadow:
-                0 0 25px
-                rgba(0, 120, 255, 0.15);
-        }
-
-
-        /* =========================
-           MESSAGES
-        ========================= */
-
-        .message {
-
-            max-width: 900px;
-
-            margin:
-                0 auto 25px;
-
-            display: flex;
-
-            gap: 14px;
-        }
-
-
-        .avatar {
-
-            min-width: 38px;
-
-            width: 38px;
-
-            height: 38px;
-
-            border-radius: 12px;
-
-            display: flex;
-
-            align-items: center;
-
-            justify-content: center;
-
-            font-size: 17px;
-
-            background:
-                rgba(10, 25, 50, 0.35);
-
-            border:
-                1px solid
-                rgba(80, 160, 255, 0.18);
-
-            backdrop-filter: blur(6px);
-        }
-
-
-        .message.user .avatar {
-
-            background:
-                linear-gradient(
-                    135deg,
-                    #086dff,
-                    #353bc5
-                );
-        }
-
-
-        .bubble {
-
-            padding:
-                13px 17px;
-
-            border-radius: 15px;
-
-            background:
-                rgba(3, 15, 35, 0.18);
-
-            border:
-                1px solid
-                rgba(90, 170, 255, 0.15);
-
-            line-height: 1.65;
-
-            color: #dce8fa;
-
-            white-space: pre-wrap;
-
-            word-break: break-word;
-
-            backdrop-filter: blur(6px);
-
-            -webkit-backdrop-filter: blur(6px);
-        }
-
-
-        .message.user {
-
-            justify-content: flex-end;
-        }
-
-
-        .message.user .bubble {
-
-            background:
-                rgba(15, 90, 210, 0.35);
-
-            border:
-                1px solid
-                rgba(100, 190, 255, 0.25);
-        }
-
-
-        /* =========================
-           INPUT AREA
-        ========================= */
-
-        .input-area {
-
-            padding:
-                15px 8% 25px;
-
-            background:
-                linear-gradient(
-                    to bottom,
-                    transparent,
-                    rgba(2, 8, 20, 0.20)
-                );
-        }
-
-
-        .input-box {
-
-            max-width: 900px;
-
-            margin: auto;
-
-            display: flex;
-
-            align-items: flex-end;
-
-            gap: 10px;
-
-            padding: 10px;
-
-            border-radius: 18px;
-
-            background:
-                rgba(3, 15, 35, 0.20);
-
-            border:
-                1px solid
-                rgba(90, 170, 255, 0.20);
-
-            box-shadow:
-                0 10px 40px
-                rgba(0, 0, 0, 0.15);
-
-            backdrop-filter:
-                blur(8px)
-                saturate(120%);
-
-            -webkit-backdrop-filter:
-                blur(8px)
-                saturate(120%);
-        }
-
-
-        textarea {
-
-            flex: 1;
-
-            resize: none;
-
-            border: none;
-
-            outline: none;
-
-            background: transparent;
-
-            color: white;
-
-            font-size: 15px;
-
-            min-height: 45px;
-
-            max-height: 150px;
-
-            padding: 12px;
-        }
-
-
-        textarea::placeholder {
-            color: #8295b5;
-        }
-
-
-        /* =========================
-           ATTACHMENT BUTTON
-        ========================= */
-
-        .attach {
-
-            width: 45px;
-
-            height: 45px;
-
-            flex-shrink: 0;
-
-            border:
-                1px solid
-                rgba(90, 170, 255, 0.22);
-
-            border-radius: 13px;
-
-            background:
-                rgba(3, 15, 35, 0.25);
-
-            color: #a8d7ff;
-
-            font-size: 20px;
-
-            cursor: pointer;
-
-            display: flex;
-
-            align-items: center;
-
-            justify-content: center;
-
-            transition: 0.2s ease;
-
-            backdrop-filter: blur(8px);
-
-            -webkit-backdrop-filter: blur(8px);
-        }
-
-
-        .attach:hover {
-
-            background:
-                rgba(20, 100, 220, 0.35);
-
-            border-color:
-                rgba(90, 180, 255, 0.45);
-
-            box-shadow:
-                0 0 20px
-                rgba(0, 130, 255, 0.25);
-
-            transform:
-                translateY(-1px);
-        }
-
-
-        /* =========================
-           FILE PREVIEW
-        ========================= */
-
-        .file-preview {
-
-            display: none;
-
-            max-width: 900px;
-
-            margin:
-                8px auto 0;
-
-            padding:
-                9px 12px;
-
-            border-radius: 11px;
-
-            background:
-                rgba(3, 15, 35, 0.30);
-
-            border:
-                1px solid
-                rgba(90, 170, 255, 0.20);
-
-            color: #d8eaff;
-
-            font-size: 13px;
-
-            backdrop-filter: blur(8px);
-
-            -webkit-backdrop-filter: blur(8px);
-        }
-
-
-        .file-preview.active {
-
-            display: flex;
-
-            align-items: center;
-
-            justify-content: space-between;
-
-            gap: 10px;
-        }
-
-
-        .file-name {
-
-            overflow: hidden;
-
-            text-overflow: ellipsis;
-
-            white-space: nowrap;
-        }
-
-
-        .file-remove {
-
-            border: none;
-
-            background: transparent;
-
-            color: #ff8b8b;
-
-            cursor: pointer;
-
-            font-size: 16px;
-        }
-
-
-        .file-remove:hover {
-
-            color: #ff5555;
-        }
-
-
-        /* =========================
-           SEND
-        ========================= */
-
-        .send {
-
-            width: 45px;
-
-            height: 45px;
-
-            border: none;
-
-            border-radius: 13px;
-
-            background:
-                linear-gradient(
-                    135deg,
-                    #087cff,
-                    #3151dc
-                );
-
-            color: white;
-
-            font-size: 18px;
-
-            cursor: pointer;
-
-            box-shadow:
-                0 0 18px
-                rgba(0, 120, 255, 0.20);
-        }
-
-
-        .send:hover {
-
-            box-shadow:
-                0 0 25px
-                rgba(0, 140, 255, 0.45);
-        }
-
-
-        .send:disabled {
-
-            opacity: 0.5;
-
-            cursor: not-allowed;
-        }
-
-
-        .hint {
-
-            text-align: center;
-
-            color: #7183a2;
-
-            font-size: 11px;
-
-            margin-top: 9px;
-        }
-
-
-        /* =========================
-           TYPING
-        ========================= */
-
-        .typing {
-
-            display: flex;
-
-            gap: 5px;
-
-            padding: 5px 0;
-        }
-
-
-        .typing span {
-
-            width: 7px;
-
-            height: 7px;
-
-            border-radius: 50%;
-
-            background: #55aaff;
-
-            animation:
-                bounce 1s infinite;
-        }
-
-
-        .typing span:nth-child(2) {
-            animation-delay: .15s;
-        }
-
-
-        .typing span:nth-child(3) {
-            animation-delay: .3s;
-        }
-
-
-        @keyframes bounce {
-
-            0%,
-            100% {
-
-                transform:
-                    translateY(0);
-
-                opacity: .4;
-            }
-
-            50% {
-
-                transform:
-                    translateY(-5px);
-
-                opacity: 1;
-            }
-        }
-
-
-        /* =========================
-           SCROLLBAR
-        ========================= */
-
-        .chat::-webkit-scrollbar {
-            width: 6px;
-        }
-
-
-        .chat::-webkit-scrollbar-track {
-            background: transparent;
-        }
-
-
-        .chat::-webkit-scrollbar-thumb {
-
-            background:
-                rgba(70, 150, 255, 0.35);
-
-            border-radius: 10px;
-        }
-
-
-        /* =========================
-           MOBILE
-        ========================= */
-
-        @media(max-width:800px) {
-
-            .sidebar {
-                display: none;
-            }
-
-            .chat {
-                padding: 25px 15px;
-            }
-
-            .input-area {
-                padding:
-                    10px 15px 18px;
-            }
-
-            .welcome h1 {
-                font-size: 32px;
-            }
-
-            .suggestions {
-                grid-template-columns: 1fr;
-            }
-
-            .model {
-                display: none;
-            }
-
-            body {
-                background-position:
-                    center center;
-            }
-
-            .file-preview {
-                max-width: 100%;
-            }
-        }
-
-    </style>
-
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JAXX AI</title>
+
+<style>
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    background:
+        linear-gradient(rgba(3, 8, 25, 0.78), rgba(3, 8, 25, 0.9)),
+        url("/background.png") center/cover fixed;
+    color: white;
+    height: 100vh;
+    overflow: hidden;
+}
+
+.app {
+    display: flex;
+    height: 100vh;
+}
+
+/* ================= SIDEBAR ================= */
+
+.sidebar {
+    width: 250px;
+    background: rgba(4, 10, 30, 0.82);
+    backdrop-filter: blur(18px);
+    border-right: 1px solid rgba(255,255,255,0.08);
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+}
+
+.logo {
+    font-size: 28px;
+    font-weight: 800;
+    letter-spacing: 2px;
+    margin-bottom: 25px;
+}
+
+.new-chat {
+    width: 100%;
+    padding: 13px;
+    border: none;
+    border-radius: 12px;
+    background: rgba(40, 100, 255, 0.25);
+    color: white;
+    cursor: pointer;
+    font-size: 15px;
+    transition: 0.2s;
+}
+
+.new-chat:hover {
+    background: rgba(40, 100, 255, 0.45);
+}
+
+.sidebar-footer {
+    margin-top: auto;
+    color: #8d96b5;
+    font-size: 12px;
+    text-align: center;
+}
+
+/* ================= MAIN ================= */
+
+.main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.topbar {
+    height: 65px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 25px;
+    background: rgba(4, 10, 30, 0.55);
+    backdrop-filter: blur(15px);
+    border-bottom: 1px solid rgba(255,255,255,0.07);
+}
+
+.top-title {
+    font-size: 19px;
+    font-weight: bold;
+}
+
+.online {
+    font-size: 13px;
+    color: #62ff9b;
+}
+
+/* ================= CHAT ================= */
+
+.chat {
+    flex: 1;
+    overflow-y: auto;
+    padding: 30px 8%;
+    scroll-behavior: smooth;
+}
+
+.welcome {
+    text-align: center;
+    margin-top: 12vh;
+}
+
+.welcome h1 {
+    font-size: 42px;
+    margin-bottom: 10px;
+}
+
+.welcome p {
+    color: #9aa4c5;
+}
+
+.message {
+    display: flex;
+    margin: 15px 0;
+}
+
+.message.user {
+    justify-content: flex-end;
+}
+
+.bubble {
+    max-width: 75%;
+    padding: 13px 17px;
+    border-radius: 17px;
+    line-height: 1.5;
+    white-space: pre-wrap;
+    word-break: break-word;
+}
+
+.message.user .bubble {
+    background: rgba(43, 103, 255, 0.45);
+    border-bottom-right-radius: 5px;
+}
+
+.message.ai .bubble {
+    background: rgba(255,255,255,0.07);
+    border-bottom-left-radius: 5px;
+}
+
+/* ================= SUGGESTIONS ================= */
+
+.suggestions {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    padding: 0 20px 12px;
+}
+
+.suggestion {
+    padding: 9px 14px;
+    border-radius: 20px;
+    border: 1px solid rgba(255,255,255,0.1);
+    background: rgba(255,255,255,0.05);
+    color: #dce3ff;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.suggestion:hover {
+    background: rgba(60,110,255,0.2);
+}
+
+/* ================= VIDEO BUTTON ================= */
+
+.video-toggle {
+    display: block;
+    margin: 0 auto 10px;
+    padding: 9px 16px;
+    border: 1px solid rgba(100,150,255,0.25);
+    border-radius: 20px;
+    background: rgba(40,90,255,0.14);
+    color: #dce6ff;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.video-toggle:hover {
+    background: rgba(40,90,255,0.3);
+}
+
+/* ================= VIDEO PANEL ================= */
+
+.video-panel {
+    width: min(700px, 90%);
+    margin: 0 auto 12px;
+    padding: 15px;
+    background: rgba(5, 12, 35, 0.9);
+    border: 1px solid rgba(255,255,255,0.09);
+    border-radius: 17px;
+    backdrop-filter: blur(20px);
+    display: none;
+}
+
+.video-panel.show {
+    display: block;
+}
+
+.video-title {
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.video-prompt {
+    width: 100%;
+    min-height: 80px;
+    resize: vertical;
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 12px;
+    padding: 12px;
+    outline: none;
+    background: rgba(255,255,255,0.06);
+    color: white;
+    font-family: inherit;
+}
+
+.video-prompt::placeholder {
+    color: #7f89aa;
+}
+
+.video-options {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+    flex-wrap: wrap;
+}
+
+.video-options label {
+    color: #9da8c8;
+    font-size: 13px;
+}
+
+.video-options select {
+    margin-left: 5px;
+    background: #0c1538;
+    color: white;
+    border: 1px solid rgba(255,255,255,0.1);
+    padding: 7px 10px;
+    border-radius: 8px;
+}
+
+.video-generate {
+    width: 100%;
+    margin-top: 12px;
+    padding: 11px;
+    border: none;
+    border-radius: 11px;
+    background: linear-gradient(90deg, #315eff, #704cff);
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.video-generate:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+}
+
+.video-status {
+    text-align: center;
+    color: #9da8c8;
+    margin-top: 10px;
+    font-size: 13px;
+}
+
+/* ================= VIDEO RESULT ================= */
+
+.video-result {
+    margin-top: 12px;
+}
+
+.generated-video {
+    width: 100%;
+    max-width: 600px;
+    border-radius: 14px;
+    display: block;
+    margin-top: 10px;
+    background: black;
+}
+
+.download-video {
+    display: inline-block;
+    margin-top: 10px;
+    padding: 8px 13px;
+    border-radius: 9px;
+    background: rgba(50,100,255,0.25);
+    color: white;
+    text-decoration: none;
+    font-size: 13px;
+}
+
+/* ================= INPUT ================= */
+
+.input-area {
+    padding: 10px 8% 20px;
+}
+
+.input-box {
+    display: flex;
+    align-items: flex-end;
+    gap: 8px;
+    max-width: 900px;
+    margin: auto;
+    padding: 8px;
+    border-radius: 17px;
+    background: rgba(10, 20, 50, 0.8);
+    border: 1px solid rgba(255,255,255,0.1);
+    backdrop-filter: blur(18px);
+}
+
+#messageInput {
+    flex: 1;
+    min-height: 42px;
+    max-height: 150px;
+    resize: none;
+    border: none;
+    outline: none;
+    background: transparent;
+    color: white;
+    padding: 11px;
+    font-family: inherit;
+    font-size: 15px;
+}
+
+#messageInput::placeholder {
+    color: #7f89aa;
+}
+
+.attach {
+    display: flex !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    position: relative !important;
+    z-index: 99999 !important;
+
+    width: 42px;
+    height: 42px;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+    cursor: pointer;
+    background: rgba(255,255,255,0.06);
+    font-size: 20px;
+}
+
+.attach:hover {
+    background: rgba(255,255,255,0.12);
+}
+
+.send {
+    width: 42px;
+    height: 42px;
+    border: none;
+    border-radius: 12px;
+    background: #315eff;
+    color: white;
+    cursor: pointer;
+    font-size: 19px;
+}
+
+.send:hover {
+    background: #416cff;
+}
+
+.file-preview {
+    max-width: 900px;
+    margin: 7px auto 0;
+    padding: 7px 10px;
+    background: rgba(255,255,255,0.05);
+    border-radius: 10px;
+    display: none;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 13px;
+}
+
+.file-preview.show {
+    display: flex;
+}
+
+.remove-file {
+    border: none;
+    background: transparent;
+    color: #ff7070;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+/* ================= TYPING ================= */
+
+.typing {
+    display: flex;
+    gap: 5px;
+    padding: 5px;
+}
+
+.typing span {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #9ca9ff;
+    animation: typing 1s infinite alternate;
+}
+
+.typing span:nth-child(2) {
+    animation-delay: .2s;
+}
+
+.typing span:nth-child(3) {
+    animation-delay: .4s;
+}
+
+@keyframes typing {
+    from { opacity: .2; transform: translateY(2px); }
+    to { opacity: 1; transform: translateY(-2px); }
+}
+
+/* ================= MOBILE ================= */
+
+@media (max-width: 700px) {
+
+    .sidebar {
+        display: none;
+    }
+
+    .chat {
+        padding: 25px 15px;
+    }
+
+    .welcome h1 {
+        font-size: 32px;
+    }
+
+    .bubble {
+        max-width: 88%;
+    }
+
+    .input-area {
+        padding: 10px 10px 15px;
+    }
+
+    .video-panel {
+        width: calc(100% - 20px);
+    }
+
+    .topbar {
+        padding: 0 15px;
+    }
+}
+</style>
 </head>
-
 
 <body>
 
-
 <div class="app">
 
-
-    <!-- =========================
-         SIDEBAR
-    ========================= -->
-
+    <!-- SIDEBAR -->
     <aside class="sidebar">
 
-        <div class="logo">
-            JAXX<span>AI</span>
-        </div>
+        <div class="logo">JAXX</div>
 
-
-        <button
-            class="new-chat"
-            onclick="newChat()">
-
+        <button class="new-chat" onclick="newChat()">
             ＋ New Chat
-
         </button>
 
-
-        <div class="menu-title">
-            Recent Chats
-        </div>
-
-
-        <div
-            class="history"
-            id="history">
-
-            <div>
-                💬 Welcome to JAXX
-            </div>
-
-        </div>
-
-
-        <div class="bottom">
-            JAXX AI • Powered by OpenAI
+        <div class="sidebar-footer">
+            Created & developed by Ansh 😎
         </div>
 
     </aside>
 
 
-    <!-- =========================
-         MAIN
-    ========================= -->
-
+    <!-- MAIN -->
     <main class="main">
 
-
-        <!-- TOPBAR -->
-
         <header class="topbar">
-
-            <div class="status">
-
-                <div class="dot"></div>
-
-                AI Online
-
-            </div>
-
-
-            <div class="model">
-                GPT-5.6 Luna
-            </div>
-
+            <div class="top-title">JAXX AI</div>
+            <div class="online">● Online</div>
         </header>
 
 
         <!-- CHAT -->
+        <section class="chat" id="chat">
 
-        <section
-            class="chat"
-            id="chat">
-
-
-            <div
-                class="welcome"
-                id="welcome">
-
-
-                <div class="ai-icon">
-                    ✦
-                </div>
-
-
-                <h1>
-                    Meet <span>JAXX AI</span>
-                </h1>
-
-
-                <p>
-                    Your intelligent AI assistant for coding,
-                    study, ideas and everyday questions.
-                </p>
-
-
-                <div class="suggestions">
-
-
-                    <div
-                        class="suggestion"
-                        onclick="useSuggestion('Explain artificial intelligence in simple words')">
-
-                        🧠 Explain something
-
-                    </div>
-
-
-                    <div
-                        class="suggestion"
-                        onclick="useSuggestion('Give me a cool HTML project idea')">
-
-                        💻 Build something
-
-                    </div>
-
-
-                    <div
-                        class="suggestion"
-                        onclick="useSuggestion('Help me make a study timetable')">
-
-                        📚 Study help
-
-                    </div>
-
-
-                    <div
-                        class="suggestion"
-                        onclick="useSuggestion('Tell me an interesting fact')">
-
-                        ✨ Interesting fact
-
-                    </div>
-
-
-                </div>
-
+            <div class="welcome" id="welcome">
+                <h1>Hey 👋 I'm JAXX</h1>
+                <p>Your AI assistant — ask me anything.</p>
             </div>
 
         </section>
 
 
-        <!-- =========================
-             INPUT
-        ========================= -->
-
+        <!-- INPUT AREA -->
         <div class="input-area">
 
+            <!-- SUGGESTIONS -->
+            <div class="suggestions" id="suggestions">
 
-            <!-- FILE PICKER -->
-
-            <input
-                type="file"
-                id="fileInput"
-                hidden
-                accept="image/*,.pdf,.txt,.csv,.doc,.docx"
-            >
-
-
-            <div class="input-box">
-
-
-                <!-- ATTACHMENT -->
-
-                <button
-                    class="attach"
-                    id="attachBtn"
-                    type="button"
-                    title="Attach file"
-                    onclick="document.getElementById('fileInput').click()">
-
-                    📎
-
+                <button class="suggestion"
+                    onclick="useSuggestion('Explain something in simple words')">
+                    Explain something
                 </button>
 
+                <button class="suggestion"
+                    onclick="useSuggestion('Help me with coding')">
+                    Help with coding
+                </button>
 
-                <!-- TEXT -->
+                <button class="suggestion"
+                    onclick="useSuggestion('Give me some creative ideas')">
+                    Give me ideas
+                </button>
+
+            </div>
+
+
+            <!-- VIDEO TOGGLE -->
+            <button class="video-toggle" onclick="toggleVideoPanel()">
+                🎬 Create AI Video
+            </button>
+
+
+            <!-- VIDEO GENERATOR -->
+            <div class="video-panel" id="videoPanel">
+
+                <div class="video-title">
+                    🎬 JAXX AI Video Generator
+                </div>
 
                 <textarea
-                    id="input"
-                    placeholder="Message JAXX AI..."
-                    rows="1">
-                </textarea>
+                    id="videoPrompt"
+                    class="video-prompt"
+                    placeholder="Describe the video you want...&#10;&#10;Example: A futuristic city at night, neon lights, cinematic camera movement..."
+                    maxlength="2000"></textarea>
 
+                <div class="video-options">
 
-                <!-- SEND -->
+                    <label>
+                        Duration:
+                        <select id="videoDuration">
+                            <option value="2">2 seconds</option>
+                            <option value="5" selected>5 seconds</option>
+                            <option value="10">10 seconds</option>
+                        </select>
+                    </label>
+
+                    <label>
+                        Ratio:
+                        <select id="videoRatio">
+                            <option value="1280:720" selected>16:9 Landscape</option>
+                            <option value="720:1280">9:16 Portrait</option>
+                        </select>
+                    </label>
+
+                </div>
 
                 <button
-                    class="send"
-                    id="send"
-                    onclick="sendMessage()">
-
-                    ➤
-
+                    class="video-generate"
+                    id="generateVideoBtn"
+                    onclick="generateVideo()">
+                    ✨ Generate Video
                 </button>
 
+                <div class="video-status" id="videoStatus"></div>
 
             </div>
 
 
             <!-- FILE PREVIEW -->
-
-            <div
-                class="file-preview"
-                id="filePreview">
+            <div class="file-preview" id="filePreview">
+                <span id="fileName"></span>
+                <button class="remove-file" onclick="removeFile()">✕</button>
             </div>
 
 
-            <div class="hint">
+            <!-- MESSAGE INPUT -->
+            <div class="input-box">
 
-                📎 Images • PDF • Documents
-                &nbsp; | &nbsp;
-                Enter to send • Shift + Enter for new line
+                <label class="attach" title="Attach file">
+                    📎
+                    <input
+                        type="file"
+                        id="fileInput"
+                        hidden
+                        onchange="handleFile(this)">
+                </label>
+
+                <textarea
+                    id="messageInput"
+                    placeholder="Message JAXX..."
+                    rows="1"></textarea>
+
+                <button class="send" onclick="sendMessage()">
+                    ➤
+                </button>
 
             </div>
-
 
         </div>
-
 
     </main>
 
 </div>
 
 
-
 <script>
 
+/* ================= VARIABLES ================= */
 
-    /* =========================
-       ELEMENTS
-    ========================= */
+const chat = document.getElementById("chat");
+const input = document.getElementById("messageInput");
+const fileInput = document.getElementById("fileInput");
+const filePreview = document.getElementById("filePreview");
+const fileName = document.getElementById("fileName");
+const suggestions = document.getElementById("suggestions");
 
-    const input =
-        document.getElementById("input");
-
-
-    const chat =
-        document.getElementById("chat");
-
-
-    const send =
-        document.getElementById("send");
+let selectedFile = null;
 
 
-    const welcome =
-        document.getElementById("welcome");
+/* ================= LOAD CHAT ================= */
+
+function loadChat() {
+
+    const saved = localStorage.getItem("jaxx_messages");
+
+    if (!saved) return;
+
+    try {
+
+        const messages = JSON.parse(saved);
+
+        if (!messages.length) return;
+
+        document.getElementById("welcome")?.remove();
+
+        messages.forEach(message => {
+            addMessageToUI(message.role, message.content);
+        });
+
+    } catch (error) {
+
+        console.error("Chat history error:", error);
+
+    }
+
+}
 
 
-    const fileInput =
-        document.getElementById("fileInput");
+/* ================= SAVE CHAT ================= */
+
+function saveMessage(role, content) {
+
+    const messages =
+        JSON.parse(localStorage.getItem("jaxx_messages") || "[]");
+
+    messages.push({
+        role,
+        content
+    });
+
+    localStorage.setItem(
+        "jaxx_messages",
+        JSON.stringify(messages)
+    );
+}
 
 
-    const filePreview =
-        document.getElementById("filePreview");
+/* ================= ADD MESSAGE ================= */
+
+function addMessageToUI(role, content) {
+
+    const wrapper = document.createElement("div");
+
+    wrapper.className =
+        `message ${role === "user" ? "user" : "ai"}`;
+
+    const bubble = document.createElement("div");
+
+    bubble.className = "bubble";
+
+    bubble.textContent = content;
+
+    wrapper.appendChild(bubble);
+
+    chat.appendChild(wrapper);
+
+    chat.scrollTop = chat.scrollHeight;
+
+    return wrapper;
+}
 
 
-    let messages = [];
+/* ================= TYPING ================= */
+
+function showTyping() {
+
+    const wrapper = document.createElement("div");
+
+    wrapper.className = "message ai";
+    wrapper.id = "typingMessage";
+
+    wrapper.innerHTML = `
+        <div class="bubble">
+            <div class="typing">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    `;
+
+    chat.appendChild(wrapper);
+
+    chat.scrollTop = chat.scrollHeight;
+}
 
 
-    let selectedFile = null;
+function removeTyping() {
+
+    document.getElementById("typingMessage")?.remove();
+
+}
 
 
+/* ================= SUGGESTION ================= */
 
-    /* =========================
-       ENTER TO SEND
-    ========================= */
+function useSuggestion(text) {
 
-    input.addEventListener(
-        "keydown",
-        function(e) {
+    input.value = text;
 
-            if (
-                e.key === "Enter" &&
-                !e.shiftKey
-            ) {
+    input.focus();
 
-                e.preventDefault();
+}
 
-                sendMessage();
 
-            }
+/* ================= FILE ================= */
+
+function handleFile(inputElement) {
+
+    const file = inputElement.files[0];
+
+    if (!file) return;
+
+    selectedFile = file;
+
+    fileName.textContent =
+        `📎 ${file.name}`;
+
+    filePreview.classList.add("show");
+
+}
+
+
+function removeFile() {
+
+    selectedFile = null;
+
+    fileInput.value = "";
+
+    filePreview.classList.remove("show");
+
+}
+
+
+/* ================= SEND MESSAGE ================= */
+
+async function sendMessage() {
+
+    const message = input.value.trim();
+
+    if (!message && !selectedFile) return;
+
+
+    document.getElementById("welcome")?.remove();
+
+    suggestions.style.display = "none";
+
+
+    if (message) {
+
+        addMessageToUI("user", message);
+
+        saveMessage("user", message);
+
+    }
+
+
+    showTyping();
+
+
+    try {
+
+        let response;
+
+
+        /* FILE UPLOAD */
+
+        if (selectedFile) {
+
+            const formData = new FormData();
+
+            formData.append("file", selectedFile);
+
+            formData.append("message", message);
+
+
+            response = await fetch("/api/upload", {
+                method: "POST",
+                body: formData
+            });
+
 
         }
-    );
 
+        /* NORMAL CHAT */
 
+        else {
 
-    /* =========================
-       AUTO RESIZE
-    ========================= */
+            const messages =
+                JSON.parse(
+                    localStorage.getItem("jaxx_messages") || "[]"
+                );
 
-    input.addEventListener(
-        "input",
-        function() {
+            response = await fetch("/api/chat", {
 
-            this.style.height = "auto";
+                method: "POST",
 
-            this.style.height =
-                Math.min(
-                    this.scrollHeight,
-                    150
-                ) + "px";
+                headers: {
+                    "Content-Type": "application/json"
+                },
+
+                body: JSON.stringify({
+                    messages
+                })
+
+            });
 
         }
-    );
 
 
+        const data = await response.json();
 
-    /* =========================
-       FILE SELECT
-    ========================= */
-
-    fileInput.addEventListener(
-        "change",
-        function() {
-
-            if (
-                !this.files ||
-                this.files.length === 0
-            ) {
-
-                return;
-
-            }
+        removeTyping();
 
 
-            selectedFile =
-                this.files[0];
+        if (!response.ok) {
 
-
-            filePreview.innerHTML = `
-
-                <span class="file-name">
-                    📎 ${selectedFile.name}
-                </span>
-
-                <button
-                    class="file-remove"
-                    type="button"
-                    onclick="removeFile()">
-
-                    ✕
-
-                </button>
-
-            `;
-
-
-            filePreview.classList.add(
-                "active"
+            throw new Error(
+                data.error || "Something went wrong"
             );
 
         }
-    );
 
 
+        const reply =
+            data.reply || "I couldn't generate a response.";
 
-    /* =========================
-       REMOVE FILE
-    ========================= */
 
-    function removeFile() {
+        addMessageToUI("ai", reply);
 
-        selectedFile = null;
+        saveMessage("assistant", reply);
 
-        fileInput.value = "";
 
-        filePreview.innerHTML = "";
+    } catch (error) {
 
-        filePreview.classList.remove(
-            "active"
+        removeTyping();
+
+        console.error(error);
+
+        const errorMessage =
+            "❌ " + (error.message || "Something went wrong.");
+
+        addMessageToUI("ai", errorMessage);
+
+    }
+
+
+    input.value = "";
+
+    removeFile();
+
+}
+
+
+/* ================= VIDEO PANEL ================= */
+
+function toggleVideoPanel() {
+
+    const panel =
+        document.getElementById("videoPanel");
+
+    panel.classList.toggle("show");
+
+}
+
+
+/* ================= GENERATE VIDEO ================= */
+
+async function generateVideo() {
+
+    const prompt =
+        document.getElementById("videoPrompt").value.trim();
+
+    const duration =
+        Number(
+            document.getElementById("videoDuration").value
         );
 
+    const ratio =
+        document.getElementById("videoRatio").value;
+
+    const button =
+        document.getElementById("generateVideoBtn");
+
+    const status =
+        document.getElementById("videoStatus");
+
+
+    if (!prompt) {
+
+        status.textContent =
+            "⚠️ Pehle video ka prompt likho.";
+
+        return;
+
     }
 
 
+    button.disabled = true;
 
-    /* =========================
-       SUGGESTION
-    ========================= */
+    button.textContent =
+        "⏳ Generating...";
 
-    function useSuggestion(text) {
-
-        input.value = text;
-
-        input.focus();
-
-        sendMessage();
-
-    }
+    status.textContent =
+        "🎬 JAXX is creating your video... This may take a little while.";
 
 
+    try {
 
-    /* =========================
-       ADD MESSAGE
-    ========================= */
+        const response =
+            await fetch("/api/generate-video", {
 
-    function addMessage(role, text) {
+                method: "POST",
 
-        const currentWelcome =
-            document.getElementById(
-                "welcome"
+                headers: {
+                    "Content-Type": "application/json"
+                },
+
+                body: JSON.stringify({
+                    prompt,
+                    duration,
+                    ratio
+                })
+
+            });
+
+
+        const data =
+            await response.json();
+
+
+        if (!response.ok) {
+
+            throw new Error(
+                data.error || "Video generation failed."
             );
-
-
-        if (currentWelcome) {
-
-            currentWelcome.style.display =
-                "none";
 
         }
 
 
+        if (!data.videoUrl) {
+
+            throw new Error(
+                "Video URL nahi mila."
+            );
+
+        }
+
+
+        status.textContent =
+            "✅ Video generated successfully!";
+
+
+        /* ADD VIDEO TO CHAT */
+
         const wrapper =
-            document.createElement(
-                "div"
-            );
+            document.createElement("div");
 
-
-        wrapper.className =
-            "message " + role;
-
-
-        const avatar =
-            document.createElement(
-                "div"
-            );
-
-
-        avatar.className =
-            "avatar";
-
-
-        avatar.textContent =
-            role === "user"
-                ? "👤"
-                : "✦";
+        wrapper.className = "message ai";
 
 
         const bubble =
-            document.createElement(
-                "div"
-            );
+            document.createElement("div");
+
+        bubble.className = "bubble";
 
 
-        bubble.className =
-            "bubble";
+        const title =
+            document.createElement("div");
+
+        title.textContent =
+            "🎬 Here's your generated video:";
 
 
-        bubble.textContent =
-            text;
+        const video =
+            document.createElement("video");
+
+        video.className =
+            "generated-video";
+
+        video.controls = true;
+
+        video.playsInline = true;
+
+        video.src =
+            data.videoUrl;
 
 
-        wrapper.appendChild(avatar);
+        const download =
+            document.createElement("a");
+
+        download.className =
+            "download-video";
+
+        download.href =
+            data.videoUrl;
+
+        download.target =
+            "_blank";
+
+        download.rel =
+            "noopener noreferrer";
+
+        download.textContent =
+            "▶ Open Video";
+
+
+        bubble.appendChild(title);
+
+        bubble.appendChild(video);
+
+        bubble.appendChild(download);
 
         wrapper.appendChild(bubble);
 
@@ -1440,536 +1063,90 @@
             chat.scrollHeight;
 
 
-        return wrapper;
+    } catch (error) {
+
+        console.error(error);
+
+        status.textContent =
+            "❌ " +
+            (error.message ||
+            "Video generation failed.");
 
     }
 
 
+    button.disabled = false;
 
-    /* =========================
-       TYPING
-    ========================= */
+    button.textContent =
+        "✨ Generate Video";
 
-    function showTyping() {
-
-        const wrapper =
-            document.createElement(
-                "div"
-            );
+}
 
 
-        wrapper.className =
-            "message assistant";
+/* ================= NEW CHAT ================= */
+
+function newChat() {
+
+    localStorage.removeItem("jaxx_messages");
+
+    chat.innerHTML = `
+        <div class="welcome" id="welcome">
+            <h1>Hey 👋 I'm JAXX</h1>
+            <p>Your AI assistant — ask me anything.</p>
+        </div>
+    `;
 
 
-        wrapper.id =
-            "typing";
+    suggestions.style.display = "flex";
 
 
-        wrapper.innerHTML = `
+    document.getElementById("videoPrompt").value = "";
 
-            <div class="avatar">
-                ✦
-            </div>
+    document.getElementById("videoStatus").textContent = "";
 
-            <div class="bubble">
-
-                <div class="typing">
-
-                    <span></span>
-                    <span></span>
-                    <span></span>
-
-                </div>
-
-            </div>
-
-        `;
+    document.getElementById("videoPanel")
+        .classList.remove("show");
 
 
-        chat.appendChild(wrapper);
+    input.value = "";
 
-        chat.scrollTop =
-            chat.scrollHeight;
+    removeFile();
 
-    }
-
+}
 
 
-    function removeTyping() {
+/* ================= ENTER TO SEND ================= */
 
-        const typing =
-            document.getElementById(
-                "typing"
-            );
+input.addEventListener("keydown", function(event) {
 
+    if (event.key === "Enter" && !event.shiftKey) {
 
-        if (typing) {
+        event.preventDefault();
 
-            typing.remove();
-
-        }
+        sendMessage();
 
     }
 
+});
 
 
-    /* =========================
-       SEND NORMAL MESSAGE
-    ========================= */
+/* ================= AUTO RESIZE ================= */
 
-    async function sendMessage() {
+input.addEventListener("input", function() {
 
+    this.style.height = "auto";
 
-        const text =
-            input.value.trim();
+    this.style.height =
+        Math.min(this.scrollHeight, 150) + "px";
 
+});
 
-        /*
-         * Allow sending when either
-         * text OR file exists.
-         */
 
-        if (
-            (!text && !selectedFile) ||
-            send.disabled
-        ) {
+/* ================= START ================= */
 
-            return;
-
-        }
-
-
-        send.disabled = true;
-
-
-        showTyping();
-
-
-
-        try {
-
-
-            /* =========================
-               FILE UPLOAD
-            ========================= */
-
-            if (selectedFile) {
-
-
-                const formData =
-                    new FormData();
-
-
-                formData.append(
-                    "file",
-                    selectedFile
-                );
-
-
-                formData.append(
-                    "message",
-                    text ||
-                    "Please analyze this file and explain it clearly."
-                );
-
-
-                /*
-                 * Show user's file
-                 */
-
-                addMessage(
-                    "user",
-                    "📎 " +
-                    selectedFile.name +
-                    (
-                        text
-                            ? "\n\n" + text
-                            : ""
-                    )
-                );
-
-
-                const response =
-                    await fetch(
-                        "/api/upload",
-                        {
-
-                            method: "POST",
-
-                            body: formData
-
-                        }
-                    );
-
-
-                const data =
-                    await response.json();
-
-
-                removeTyping();
-
-
-                if (!response.ok) {
-
-                    throw new Error(
-                        data.error ||
-                        "File upload failed"
-                    );
-
-                }
-
-
-                const reply =
-                    data.reply ||
-                    "File analyze ho gayi, but response empty hai.";
-
-
-                addMessage(
-                    "assistant",
-                    reply
-                );
-
-
-                messages.push({
-
-                    role: "user",
-
-                    content:
-                        "📎 " +
-                        selectedFile.name +
-                        (
-                            text
-                                ? "\n" + text
-                                : ""
-                        )
-
-                });
-
-
-                messages.push({
-
-                    role: "assistant",
-
-                    content: reply
-
-                });
-
-
-                saveChat();
-
-
-                removeFile();
-
-
-                input.value = "";
-
-                input.style.height =
-                    "auto";
-
-
-                return;
-
-            }
-
-
-
-            /* =========================
-               NORMAL CHAT
-            ========================= */
-
-            addMessage(
-                "user",
-                text
-            );
-
-
-            messages.push({
-
-                role: "user",
-
-                content: text
-
-            });
-
-
-            input.value = "";
-
-            input.style.height =
-                "auto";
-
-
-            const response =
-                await fetch(
-                    "/api/chat",
-                    {
-
-                        method: "POST",
-
-                        headers: {
-
-                            "Content-Type":
-                                "application/json"
-
-                        },
-
-                        body:
-                            JSON.stringify({
-
-                                messages:
-                                    messages
-
-                            })
-
-                    }
-                );
-
-
-            const data =
-                await response.json();
-
-
-            removeTyping();
-
-
-            if (!response.ok) {
-
-                throw new Error(
-                    data.error ||
-                    "Server error"
-                );
-
-            }
-
-
-            const reply =
-                data.reply ||
-                "No response received.";
-
-
-            addMessage(
-                "assistant",
-                reply
-            );
-
-
-            messages.push({
-
-                role: "assistant",
-
-                content: reply
-
-            });
-
-
-            saveChat();
-
-
-        }
-
-
-        catch (error) {
-
-
-            removeTyping();
-
-
-            addMessage(
-
-                "assistant",
-
-                "⚠️ JAXX response nahi aa paaya.\n\n" +
-
-                "Error: " +
-                error.message
-
-            );
-
-
-            console.error(
-                "JAXX ERROR:",
-                error
-            );
-
-        }
-
-
-        finally {
-
-            send.disabled =
-                false;
-
-            input.focus();
-
-        }
-
-    }
-
-
-
-    /* =========================
-       NEW CHAT
-    ========================= */
-
-    function newChat() {
-
-        messages = [];
-
-
-        removeFile();
-
-
-        chat.innerHTML = `
-
-            <div
-                class="welcome"
-                id="welcome">
-
-                <div class="ai-icon">
-                    ✦
-                </div>
-
-                <h1>
-                    Meet <span>JAXX AI</span>
-                </h1>
-
-                <p>
-                    Your intelligent AI assistant
-                    for coding, study,
-                    ideas and everyday questions.
-                </p>
-
-                <div class="suggestions">
-
-
-                    <div
-                        class="suggestion"
-                        onclick="useSuggestion('Explain artificial intelligence in simple words')">
-
-                        🧠 Explain something
-
-                    </div>
-
-
-                    <div
-                        class="suggestion"
-                        onclick="useSuggestion('Give me a cool HTML project idea')">
-
-                        💻 Build something
-
-                    </div>
-
-
-                    <div
-                        class="suggestion"
-                        onclick="useSuggestion('Help me make a study timetable')">
-
-                        📚 Study help
-
-                    </div>
-
-
-                    <div
-                        class="suggestion"
-                        onclick="useSuggestion('Tell me an interesting fact')">
-
-                        ✨ Interesting fact
-
-                    </div>
-
-
-                </div>
-
-            </div>
-
-        `;
-
-
-        localStorage.removeItem(
-            "jaxx_messages"
-        );
-
-    }
-
-
-
-    /* =========================
-       SAVE CHAT
-    ========================= */
-
-    function saveChat() {
-
-        localStorage.setItem(
-
-            "jaxx_messages",
-
-            JSON.stringify(messages)
-
-        );
-
-    }
-
-
-
-    /* =========================
-       LOAD CHAT
-    ========================= */
-
-    function loadChat() {
-
-        const saved =
-            localStorage.getItem(
-                "jaxx_messages"
-            );
-
-
-        if (!saved)
-            return;
-
-
-        try {
-
-            messages =
-                JSON.parse(saved);
-
-
-            messages.forEach(
-                message => {
-
-                    addMessage(
-
-                        message.role,
-
-                        message.content
-
-                    );
-
-                }
-            );
-
-        }
-
-
-        catch {
-
-            messages = [];
-
-        }
-
-    }
-
-
-
-    /* =========================
-       START
-    ========================= */
-
-    loadChat();
-
+loadChat();
 
 </script>
 
-
 </body>
-
 </html>
