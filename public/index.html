@@ -1465,6 +1465,9 @@ function updateAccountUI(){
 
 function getPlanLabel(plan){
 
+    if(plan === "owner")
+        return "👑 OWNER";
+
     if(plan === "pro")
         return "⭐ PRO";
 
@@ -2666,10 +2669,11 @@ function handleFileButton(){
     }
 
 
-    if(
-        currentUser.plan !== "pro" &&
-        currentUser.plan !== "pro_plus"
-    ){
+   if(
+    currentUser.plan !== "owner" &&
+    currentUser.plan !== "pro" &&
+    currentUser.plan !== "pro_plus"
+){
 
         openPremiumModal();
 
