@@ -2950,13 +2950,20 @@ async function generateImage(
 
         try{
 
-            const createResponse =
-                await fetch(
-                    "/api/conversations",
-                    {
-                        method:"POST"
-                    }
-                );
+            const response =
+    await fetch(
+        "/api/conversations",
+        {
+            method: "POST",
+            credentials: "include",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                title: "New Chat"
+            })
+        }
+    );
 
 
             const createData =
